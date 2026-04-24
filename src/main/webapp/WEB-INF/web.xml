@@ -11,4 +11,12 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.xhtml</welcome-file>
   </welcome-file-list>
+  <servlet>
+  <servlet-name>ErroController</servlet-name>
+  <jsp-file>/WEB-INF/views/erro.jsp</jsp-file>
+</servlet>
+<servlet-mapping>
+  <servlet-name>ErroController</servlet-name>
+  <url-pattern>/erro</url-pattern>
+</servlet-mapping>
 </web-app>

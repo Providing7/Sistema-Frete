@@ -1,0 +1,4 @@
+# Copie este arquivo para src/main/java/db.properties e preencha com suas credenciais
+db.url=jdbc:postgresql://localhost:5432/gestao_fretes
+db.usuario=postgres
+db.senha=COLOQUE_SUA_SENHA_AQUI
