@@ -1,108 +1,104 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=ISO-8859-1" language="java" %>
 <%@ page import="java.util.List, br.com.gestaofretes.model.Veiculo" %>
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8"><title>Ve√≠culos</title>
-  <style>
-    body{font-family:Arial,sans-serif;background:#f0f2f5;}
-    .content{padding:32px;}
-    .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
-    h2{color:#1a3a5c;}
-    form.filtro{display:flex;gap:8px;}
-    input[type=text]{padding:8px 12px;border:1px solid #cbd5e1;border-radius:4px;font-size:14px;width:280px;}
-    .btn{padding:8px 16px;border:none;border-radius:4px;cursor:pointer;font-size:14px;text-decoration:none;display:inline-block;}
-    .btn-primary{background:#1a3a5c;color:white;}
-    .btn-secondary{background:#e2e8f0;color:#334155;}
-    .btn-danger{background:#dc2626;color:white;}
-    .btn-sm{padding:4px 10px;font-size:12px;}
-    table{width:100%;border-collapse:collapse;background:white;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.1);}
-    th{background:#1a3a5c;color:white;padding:12px 16px;text-align:left;font-size:13px;}
-    td{padding:11px 16px;border-bottom:1px solid #f1f5f9;font-size:13px;}
-    tr:last-child td{border-bottom:none;}
-    tr:hover td{background:#f8fafc;}
-    .badge{padding:3px 10px;border-radius:12px;font-size:11px;font-weight:bold;}
-    .badge-DISPONIVEL{background:#dcfce7;color:#166534;}
-    .badge-EM_VIAGEM{background:#dbeafe;color:#1e40af;}
-    .badge-EM_MANUTENCAO{background:#fef9c3;color:#854d0e;}
-    .paginacao{margin-top:16px;display:flex;gap:8px;align-items:center;}
-    .alerta{padding:12px 16px;border-radius:4px;margin-bottom:16px;font-size:14px;}
-    .alerta-erro{background:#fee2e2;color:#991b1b;border-left:4px solid #dc2626;}
-    .alerta-sucesso{background:#dcfce7;color:#166534;border-left:4px solid #16a34a;}
-  </style>
+  <meta charset="ISO-8859-1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VeÌculos &#8212; Gest„o de Fretes</title>
+
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/_nav.jsp" />
-<div class="content">
-  <div class="toolbar">
-    <h2>Ve√≠culos</h2>
-    <a class="btn btn-primary" href="${pageContext.request.contextPath}/veiculos?acao=novo">+ Novo Ve√≠culo</a>
+<div class="main-wrapper">
+
+  <div class="page-header">
+    <div>
+      <h1>&#128666; VeÌculos</h1>
+      <div class="breadcrumb">Cadastro &#8594; VeÌculos</div>
+    </div>
+    <a class="btn btn-primary" href="${pageContext.request.contextPath}/veiculos?acao=novo">+ Novo VeÌculo</a>
   </div>
 
-  <% if (request.getAttribute("erro") != null) { %>
-    <div class="alerta alerta-erro">${erro}</div>
-  <% } %>
-  <% if (request.getParameter("sucesso") != null) { %>
-    <div class="alerta alerta-sucesso">${param.sucesso}</div>
-  <% } %>
+  <div class="page-content">
 
-  <form class="filtro" method="get" action="${pageContext.request.contextPath}/veiculos" style="margin-bottom:16px;">
-    <input type="text" name="filtro" placeholder="Filtrar por placa..." value="${filtro}" />
-    <button class="btn btn-secondary" type="submit">Buscar</button>
-    <% if (request.getAttribute("filtro") != null && !((String)request.getAttribute("filtro")).isEmpty()) { %>
-      <a class="btn btn-secondary" href="${pageContext.request.contextPath}/veiculos">Limpar</a>
+    <% if (request.getAttribute("erro") != null) { %>
+      <div class="alert alert-error">&#9888; ${erro}</div>
     <% } %>
-  </form>
+    <% if (request.getParameter("sucesso") != null) { %>
+      <div class="alert alert-success">&#9989; ${param.sucesso}</div>
+    <% } %>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Placa</th><th>RNTRC</th><th>Tipo</th><th>Ano</th>
-        <th>Capacidade (kg)</th><th>Volume (m¬≥)</th><th>Status</th><th>A√ß√µes</th>
-      </tr>
-    </thead>
-    <tbody>
+    <div class="card">
+      <div class="card-header">
+        <h3>Lista de VeÌculos</h3>
+        <form method="get" action="${pageContext.request.contextPath}/veiculos" style="display:flex;gap:8px;align-items:center;">
+          <div class="search-box">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" name="filtro" placeholder="Buscar por placa..." value="${filtro}" />
+          </div>
+          <button class="btn btn-secondary" type="submit">Buscar</button>
+          <% if (request.getAttribute("filtro") != null && !((String)request.getAttribute("filtro")).isEmpty()) { %>
+            <a class="btn btn-secondary" href="${pageContext.request.contextPath}/veiculos">&#10005; Limpar</a>
+          <% } %>
+        </form>
+      </div>
+
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Placa</th><th>RNTRC</th><th>Tipo</th><th>Ano</th>
+              <th>Capacidade (kg)</th><th>Volume (m≥)</th><th>Status</th><th>AÁıes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%
+              List<Veiculo> veiculos = (List<Veiculo>) request.getAttribute("veiculos");
+              if (veiculos != null && !veiculos.isEmpty()) {
+                for (Veiculo v : veiculos) {
+            %>
+            <tr>
+              <td><strong style="font-family:monospace;letter-spacing:.05em;"><%= v.getPlaca() %></strong></td>
+              <td><%= v.getRntrc() %></td>
+              <td><%= v.getTipo() != null ? v.getTipo().name() : "" %></td>
+              <td><%= v.getAnoFabricacao() %></td>
+              <td><%= v.getCapacidadeKg() %> kg</td>
+              <td><%= v.getVolumeM3() %> m≥</td>
+              <td><span class="badge badge-<%= v.getStatus().name() %>"><%= v.getStatus().name() %></span></td>
+              <td>
+                <div class="td-actions">
+                  <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/veiculos?acao=editar&id=<%= v.getId() %>">&#9999; Editar</a>
+                  <a class="btn btn-danger btn-sm" href="${pageContext.request.contextPath}/veiculos?acao=excluir&id=<%= v.getId() %>"
+                     onclick="return confirm('Confirma a exclus„o?')">&#128465; Excluir</a>
+                </div>
+              </td>
+            </tr>
+            <%   }
+              } else { %>
+            <tr><td colspan="8" style="text-align:center;padding:40px;color:#94a3b8;">Nenhum veÌculo encontrado.</td></tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
       <%
-        List<Veiculo> veiculos = (List<Veiculo>) request.getAttribute("veiculos");
-        if (veiculos != null) {
-          for (Veiculo v : veiculos) {
+        Integer pagina       = (Integer) request.getAttribute("pagina");
+        Integer totalPaginas = (Integer) request.getAttribute("totalPaginas");
+        if (pagina != null && totalPaginas != null && totalPaginas > 1) {
       %>
-      <tr>
-        <td><%= v.getPlaca() %></td>
-        <td><%= v.getRntrc() %></td>
-        <td><%= v.getTipo() != null ? v.getTipo().name() : "" %></td>
-        <td><%= v.getAnoFabricacao() %></td>
-        <td><%= v.getCapacidadeKg() %></td>
-        <td><%= v.getVolumeM3() %></td>
-        <td>
-          <span class="badge badge-<%= v.getStatus().name() %>"><%= v.getStatus().name() %></span>
-        </td>
-        <td>
-          <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/veiculos?acao=editar&id=<%= v.getId() %>">Editar</a>
-          <a class="btn btn-danger btn-sm" href="${pageContext.request.contextPath}/veiculos?acao=excluir&id=<%= v.getId() %>"
-             onclick="return confirm('Confirma a exclus√£o?')">Excluir</a>
-        </td>
-      </tr>
-      <%   }
-        } %>
-    </tbody>
-  </table>
-
-  <%
-    Integer pagina       = (Integer) request.getAttribute("pagina");
-    Integer totalPaginas = (Integer) request.getAttribute("totalPaginas");
-    if (pagina != null && totalPaginas != null && totalPaginas > 1) {
-  %>
-  <div class="paginacao">
-    <% if (pagina > 1) { %>
-      <a class="btn btn-secondary btn-sm" href="?pagina=<%= pagina-1 %>&filtro=${filtro}">‚Üê Anterior</a>
-    <% } %>
-    <span style="font-size:13px;color:#64748b;">P√°gina <%= pagina %> de <%= totalPaginas %></span>
-    <% if (pagina < totalPaginas) { %>
-      <a class="btn btn-secondary btn-sm" href="?pagina=<%= pagina+1 %>&filtro=${filtro}">Pr√≥xima ‚Üí</a>
-    <% } %>
+      <div style="padding:12px 24px;border-top:1px solid #f1f5f9;">
+        <div class="pagination">
+          <% if (pagina > 1) { %><a class="btn btn-secondary btn-sm" href="?pagina=<%= pagina-1 %>&filtro=${filtro}">‚Üê Anterior</a><% } %>
+          <span class="page-info">P·gina <%= pagina %> de <%= totalPaginas %></span>
+          <% if (pagina < totalPaginas) { %><a class="btn btn-secondary btn-sm" href="?pagina=<%= pagina+1 %>&filtro=${filtro}">PrÛxima &#8594;</a><% } %>
+        </div>
+      </div>
+      <% } %>
+    </div>
   </div>
-  <% } %>
 </div>
 </body>
 </html>
+
+

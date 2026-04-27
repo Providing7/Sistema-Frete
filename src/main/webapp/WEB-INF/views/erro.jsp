@@ -1,9 +1,9 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=ISO-8859-1" %>
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Erro â€” GestÃ£o de Fretes</title>
+  <meta charset="ISO-8859-1">
+  <title>Erro &#8212; Gestão de Fretes</title>
   <style>
     body { font-family: Arial, sans-serif; background:#f0f2f5;
            display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
@@ -25,7 +25,10 @@
         else { out.print("Ocorreu um erro inesperado. Tente novamente."); }
       %>
     </p>
-    <a href="${pageContext.request.contextPath}/dashboard">Voltar ao inÃ­cio</a>
+    <a href="${pageContext.request.contextPath}/dashboard">Voltar ao início</a>
   </div>
 </body>
 </html>
+
+
+
