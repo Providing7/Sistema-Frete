@@ -1,7 +1,7 @@
 package br.com.gestaofretes.dao;
 
 import br.com.gestaofretes.model.Cliente;
-import br.com.gestaofretes.model.TipoCliente;
+
 import br.com.gestaofretes.util.ConexaoDB;
 
 import java.sql.*;
@@ -57,10 +57,10 @@ public class ClienteDAO {
         }
     }
 
-    public void salvar(Cliente c) throws SQLException {
+    public void salvar(Cliente c) throws SQLException {   // ← ADICIONAR esta linha
         String sql = "INSERT INTO cliente (razao_social, nome_fantasia, cnpj, inscricao_estadual, " +
-                     "tipo, logradouro, numero, complemento, bairro, municipio, uf, cep, " +
-                     "telefone, email, status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                "logradouro, numero, complemento, bairro, municipio, uf, cep, " +
+                "telefone, email, status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         try (Connection conn = ConexaoDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -70,15 +70,16 @@ public class ClienteDAO {
     }
 
     public void atualizar(Cliente c) throws SQLException {
-        String sql = "UPDATE cliente SET razao_social=?, nome_fantasia=?, cnpj=?, " +
-                     "inscricao_estadual=?, tipo=?, logradouro=?, numero=?, complemento=?, " +
-                     "bairro=?, municipio=?, uf=?, cep=?, telefone=?, email=?, status=? " +
-                     "WHERE id=?";
+    	String sql = "UPDATE cliente SET razao_social=?, nome_fantasia=?, cnpj=?, " +
+                "inscricao_estadual=?, logradouro=?, numero=?, complemento=?, " +
+                "bairro=?, municipio=?, uf=?, cep=?, telefone=?, email=?, status=? " +
+                "WHERE id=?";
+
 
         try (Connection conn = ConexaoDB.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             preencherStatement(ps, c);
-            ps.setLong(16, c.getId());
+            ps.setLong(15, c.getId());
             ps.executeUpdate();
         }
     }
@@ -116,26 +117,23 @@ public class ClienteDAO {
         }
     }
 
-    // -------------------------------------------------------
     // Métodos auxiliares privados
-    // -------------------------------------------------------
 
     private void preencherStatement(PreparedStatement ps, Cliente c) throws SQLException {
-        ps.setString(1, c.getRazaoSocial());
-        ps.setString(2, c.getNomeFantasia());
-        ps.setString(3, c.getCnpj());
-        ps.setString(4, c.getInscricaoEstadual());
-        ps.setString(5, c.getTipo().name());
-        ps.setString(6, c.getLogradouro());
-        ps.setString(7, c.getNumero());
-        ps.setString(8, c.getComplemento());
-        ps.setString(9, c.getBairro());
-        ps.setString(10, c.getMunicipio());
-        ps.setString(11, c.getUf());
-        ps.setString(12, c.getCep());
-        ps.setString(13, c.getTelefone());
-        ps.setString(14, c.getEmail());
-        ps.setBoolean(15, c.isAtivo());
+    	ps.setString(1, c.getRazaoSocial());
+    	ps.setString(2, c.getNomeFantasia());
+    	ps.setString(3, c.getCnpj());
+    	ps.setString(4, c.getInscricaoEstadual());
+    	ps.setString(5, c.getLogradouro());   // ← tudo sobe uma posição
+    	ps.setString(6, c.getNumero());
+    	ps.setString(7, c.getComplemento());
+    	ps.setString(8, c.getBairro());
+    	ps.setString(9, c.getMunicipio());
+    	ps.setString(10, c.getUf());
+    	ps.setString(11, c.getCep());
+    	ps.setString(12, c.getTelefone());
+    	ps.setString(13, c.getEmail());
+    	ps.setBoolean(14, c.isAtivo());
     }
 
     private Cliente mapear(ResultSet rs) throws SQLException {
@@ -145,7 +143,6 @@ public class ClienteDAO {
         c.setNomeFantasia(rs.getString("nome_fantasia"));
         c.setCnpj(rs.getString("cnpj"));
         c.setInscricaoEstadual(rs.getString("inscricao_estadual"));
-        c.setTipo(TipoCliente.valueOf(rs.getString("tipo")));
         c.setLogradouro(rs.getString("logradouro"));
         c.setNumero(rs.getString("numero"));
         c.setComplemento(rs.getString("complemento"));
