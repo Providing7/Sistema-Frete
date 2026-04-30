@@ -1,18 +1,49 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<style>
-  .nav { background:#1a3a5c; color:white; padding:0 32px;
-         display:flex; align-items:center; justify-content:space-between; height:56px; }
-  .nav-brand { font-size:17px; font-weight:bold; color:white; text-decoration:none; }
-  .nav-links a { color:#cbd5e1; text-decoration:none; margin-left:24px; font-size:14px; }
-  .nav-links a:hover { color:white; }
-  .nav-links a.active { color:white; font-weight:bold; border-bottom:2px solid #3b82f6; padding-bottom:2px; }
-</style>
-<div class="nav">
-  <a class="nav-brand" href="${pageContext.request.contextPath}/dashboard">Gestão de Fretes</a>
-  <div class="nav-links">
-    <a href="${pageContext.request.contextPath}/clientes">Clientes</a>
-    <a href="${pageContext.request.contextPath}/motoristas">Motoristas</a>
-    <a href="${pageContext.request.contextPath}/veiculos">Veículos</a>
-    <a href="${pageContext.request.contextPath}/logout">Sair (${sessionScope.usuarioLogado})</a>
+<%
+  String uri = request.getRequestURI();
+  String ctx = request.getContextPath();
+  String usuario = (String) session.getAttribute("usuarioLogado");
+  String inicial = (usuario != null && !usuario.isEmpty()) ? String.valueOf(Character.toUpperCase(usuario.charAt(0))) : "U";
+%>
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <a href="<%= ctx %>/dashboard">
+      <div class="brand-icon">&#128666;</div>
+      <div class="brand-text">
+        <span class="brand-name">GestãoFretes</span>
+        <span class="brand-tagline">Sistema de Gestão</span>
+      </div>
+    </a>
   </div>
-</div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section-title">Principal</div>
+
+    <a href="<%= ctx %>/dashboard" class="<%= uri.contains("/dashboard") ? "active" : "" %>">
+      <span class="nav-icon">&#127968;</span> Dashboard
+    </a>
+
+    <div class="nav-section-title">Cadastros</div>
+
+    <a href="<%= ctx %>/clientes" class="<%= uri.contains("/clientes") ? "active" : "" %>">
+      <span class="nav-icon">&#127970;</span> Clientes
+    </a>
+    <a href="<%= ctx %>/motoristas" class="<%= uri.contains("/motoristas") ? "active" : "" %>">
+      <span class="nav-icon">&#128100;</span> Motoristas
+    </a>
+    <a href="<%= ctx %>/veiculos" class="<%= uri.contains("/veiculos") ? "active" : "" %>">
+      <span class="nav-icon">&#128666;</span> Ve&iacute;culos
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a href="<%= ctx %>/logout" class="sidebar-user">
+      <div class="user-avatar"><%= inicial %></div>
+      <div class="user-info">
+        <div class="user-name"><%= usuario != null ? usuario : "Usuário" %></div>
+        <div class="user-role">Administrador</div>
+      </div>
+      <span class="logout-icon">&#8594;</span>
+    </a>
+  </div>
+</aside>

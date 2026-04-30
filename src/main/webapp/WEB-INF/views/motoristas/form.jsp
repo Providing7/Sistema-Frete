@@ -2,125 +2,133 @@
 <%@ page import="br.com.gestaofretes.model.Motorista, br.com.gestaofretes.model.CategoriaCNH,
                  br.com.gestaofretes.model.TipoVinculo, br.com.gestaofretes.model.StatusMotorista" %>
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>${motorista != null ? 'Editar' : 'Novo'} Motorista</title>
-  <style>
-    body{font-family:Arial,sans-serif;background:#f0f2f5;}
-    .content{padding:32px;max-width:800px;}
-    h2{color:#1a3a5c;margin-bottom:24px;}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-    .form-group{display:flex;flex-direction:column;gap:4px;}
-    .form-group.full{grid-column:1/-1;}
-    label{font-size:13px;font-weight:bold;color:#374151;}
-    input,select{padding:9px 12px;border:1px solid #cbd5e1;border-radius:4px;font-size:14px;}
-    .btn{padding:9px 20px;border:none;border-radius:4px;cursor:pointer;font-size:14px;text-decoration:none;display:inline-block;}
-    .btn-primary{background:#1a3a5c;color:white;}
-    .btn-secondary{background:#e2e8f0;color:#334155;}
-    .acoes{margin-top:24px;display:flex;gap:12px;}
-    .alerta-erro{padding:12px 16px;border-radius:4px;margin-bottom:16px;font-size:14px;
-                 background:#fee2e2;color:#991b1b;border-left:4px solid #dc2626;}
-    .secao{grid-column:1/-1;font-size:12px;font-weight:bold;color:#6b7280;
-           text-transform:uppercase;letter-spacing:.05em;margin-top:8px;
-           border-bottom:1px solid #e5e7eb;padding-bottom:4px;}
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${motorista != null ? 'Editar' : 'Novo'} Motorista &mdash; Gestão de Fretes</title>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-<jsp:include page="/WEB-INF/views/_nav.jsp" />
-<div class="content">
-  <h2>${motorista != null ? 'Editar Motorista' : 'Novo Motorista'}</h2>
+<div class="app-layout">
+  <jsp:include page="/WEB-INF/views/_nav.jsp" />
 
-  <% if (request.getAttribute("erro") != null) { %>
-    <div class="alerta-erro">${erro}</div>
-  <% } %>
-
-  <%
-    Motorista m = (Motorista) request.getAttribute("motorista");
-    String idVal = m != null && m.getId() != null ? String.valueOf(m.getId()) : "";
-  %>
-
-  <form method="post" action="${pageContext.request.contextPath}/motoristas">
-    <input type="hidden" name="id" value="<%= idVal %>" />
-    <div class="form-grid">
-
-      <div class="secao">Dados Pessoais</div>
-
-      <div class="form-group full">
-        <label>Nome *</label>
-        <input type="text" name="nome" value="<%= m != null ? m.getNome() : "" %>" required />
+  <div class="app-main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <span class="topbar-title">${motorista != null ? 'Editar Motorista' : 'Novo Motorista'}</span>
+        <span class="topbar-breadcrumb">Cadastro &rsaquo; Motoristas &rsaquo; ${motorista != null ? 'Editar' : 'Novo'}</span>
       </div>
-      <div class="form-group">
-        <label>CPF *</label>
-        <input type="text" name="cpf" value="<%= m != null ? m.getCpf() : "" %>" placeholder="000.000.000-00" required />
+      <div class="topbar-right">
+        <a class="btn btn-secondary" href="${pageContext.request.contextPath}/motoristas">&larr; Voltar</a>
       </div>
-      <div class="form-group">
-        <label>Data de Nascimento</label>
-        <input type="date" name="dataNascimento" value="<%= m != null && m.getDataNascimento() != null ? m.getDataNascimento().toString() : "" %>" />
-      </div>
-      <div class="form-group">
-        <label>Telefone</label>
-        <input type="text" name="telefone" value="<%= m != null ? m.getTelefone() : "" %>" />
-      </div>
+    </header>
 
-      <div class="secao">CNH</div>
+    <main class="page-body">
 
-      <div class="form-group">
-        <label>Número da CNH *</label>
-        <input type="text" name="cnhNumero" value="<%= m != null ? m.getCnhNumero() : "" %>" required />
-      </div>
-      <div class="form-group">
-        <label>Categoria *</label>
-        <select name="cnhCategoria" required>
-          <option value="">Selecione...</option>
-          <%
-            CategoriaCNH[] categorias = (CategoriaCNH[]) request.getAttribute("categorias");
-            if (categorias != null) for (CategoriaCNH cat : categorias) {
-              boolean sel = m != null && cat == m.getCnhCategoria();
-          %>
-          <option value="<%= cat.name() %>" <%= sel ? "selected" : "" %>><%= cat.name() %></option>
-          <% } %>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Validade da CNH *</label>
-        <input type="date" name="cnhValidade" value="<%= m != null && m.getCnhValidade() != null ? m.getCnhValidade().toString() : "" %>" required />
-      </div>
+      <% if (request.getAttribute("erro") != null) { %>
+        <div class="alert alert-error">&#9888; ${erro}</div>
+      <% } %>
 
-      <div class="secao">Vínculo e Status</div>
+      <%
+        Motorista m = (Motorista) request.getAttribute("motorista");
+        String idVal = m != null && m.getId() != null ? String.valueOf(m.getId()) : "";
+      %>
 
-      <div class="form-group">
-        <label>Tipo de Vínculo *</label>
-        <select name="tipoVinculo" required>
-          <option value="">Selecione...</option>
-          <%
-            TipoVinculo[] vinculos = (TipoVinculo[]) request.getAttribute("vinculos");
-            if (vinculos != null) for (TipoVinculo v : vinculos) {
-              boolean sel = m != null && v == m.getTipoVinculo();
-          %>
-          <option value="<%= v.name() %>" <%= sel ? "selected" : "" %>><%= v.name() %></option>
-          <% } %>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Status</label>
-        <select name="status">
-          <%
-            StatusMotorista[] statusLista = (StatusMotorista[]) request.getAttribute("statusLista");
-            if (statusLista != null) for (StatusMotorista s : statusLista) {
-              boolean sel = m != null ? s == m.getStatus() : s.name().equals("ATIVO");
-          %>
-          <option value="<%= s.name() %>" <%= sel ? "selected" : "" %>><%= s.name() %></option>
-          <% } %>
-        </select>
-      </div>
+      <form method="post" action="${pageContext.request.contextPath}/motoristas">
+        <input type="hidden" name="id" value="<%= idVal %>" />
 
-    </div>
-    <div class="acoes">
-      <button class="btn btn-primary" type="submit">Salvar</button>
-      <a class="btn btn-secondary" href="${pageContext.request.contextPath}/motoristas">Cancelar</a>
-    </div>
-  </form>
+        <div class="form-card">
+
+          <div class="form-section">
+            <div class="form-section-title">Dados Pessoais</div>
+            <div class="form-grid">
+              <div class="form-group full">
+                <label>Nome completo *</label>
+                <input type="text" name="nome" value="<%= m != null ? m.getNome() : "" %>" required placeholder="Nome do motorista" />
+              </div>
+              <div class="form-group">
+                <label>CPF *</label>
+                <input type="text" name="cpf" value="<%= m != null ? m.getCpf() : "" %>" placeholder="000.000.000-00" required />
+              </div>
+              <div class="form-group">
+                <label>Data de Nascimento</label>
+                <input type="date" name="dataNascimento" value="<%= m != null && m.getDataNascimento() != null ? m.getDataNascimento().toString() : "" %>" />
+              </div>
+              <div class="form-group">
+                <label>Telefone</label>
+                <input type="text" name="telefone" value="<%= m != null ? m.getTelefone() : "" %>" placeholder="(00) 00000-0000" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">CNH</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>N&uacute;mero da CNH *</label>
+                <input type="text" name="cnhNumero" value="<%= m != null ? m.getCnhNumero() : "" %>" required />
+              </div>
+              <div class="form-group">
+                <label>Categoria *</label>
+                <select name="cnhCategoria" required>
+                  <option value="">Selecione...</option>
+                  <%
+                    CategoriaCNH[] categorias = (CategoriaCNH[]) request.getAttribute("categorias");
+                    if (categorias != null) for (CategoriaCNH cat : categorias) {
+                      boolean sel = m != null && cat == m.getCnhCategoria();
+                  %>
+                  <option value="<%= cat.name() %>" <%= sel ? "selected" : "" %>><%= cat.name() %></option>
+                  <% } %>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Validade da CNH *</label>
+                <input type="date" name="cnhValidade" value="<%= m != null && m.getCnhValidade() != null ? m.getCnhValidade().toString() : "" %>" required />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="form-section-title">V&iacute;nculo e Status</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Tipo de V&iacute;nculo *</label>
+                <select name="tipoVinculo" required>
+                  <option value="">Selecione...</option>
+                  <%
+                    TipoVinculo[] vinculos = (TipoVinculo[]) request.getAttribute("vinculos");
+                    if (vinculos != null) for (TipoVinculo v : vinculos) {
+                      boolean sel = m != null && v == m.getTipoVinculo();
+                  %>
+                  <option value="<%= v.name() %>" <%= sel ? "selected" : "" %>><%= v.name() %></option>
+                  <% } %>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Status</label>
+                <select name="status">
+                  <%
+                    StatusMotorista[] statusLista = (StatusMotorista[]) request.getAttribute("statusLista");
+                    if (statusLista != null) for (StatusMotorista s : statusLista) {
+                      boolean sel = m != null ? s == m.getStatus() : s.name().equals("ATIVO");
+                  %>
+                  <option value="<%= s.name() %>" <%= sel ? "selected" : "" %>><%= s.name() %></option>
+                  <% } %>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit">&#128190; Salvar Motorista</button>
+            <a class="btn btn-secondary" href="${pageContext.request.contextPath}/motoristas">Cancelar</a>
+          </div>
+
+        </div>
+      </form>
+    </main>
+  </div>
 </div>
 </body>
 </html>
