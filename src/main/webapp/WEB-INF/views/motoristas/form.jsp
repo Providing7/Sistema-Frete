@@ -49,15 +49,15 @@
               </div>
               <div class="form-group">
                 <label>CPF *</label>
-                <input type="text" name="cpf" value="<%= m != null ? m.getCpf() : "" %>" placeholder="000.000.000-00" required />
+                <input type="text" name="cpf" data-mask="cpf" value="<%= m != null ? m.getCpf() : "" %>" placeholder="000.000.000-00" required maxlength="14" />
               </div>
               <div class="form-group">
                 <label>Data de Nascimento</label>
-                <input type="date" name="dataNascimento" value="<%= m != null && m.getDataNascimento() != null ? m.getDataNascimento().toString() : "" %>" />
+                <input type="date" name="dataNascimento" value="<%= m != null && m.getDataNascimento() != null ? m.getDataNascimento().toString() : "" %>" min="1940-01-01" max="2010-12-31" />
               </div>
               <div class="form-group">
                 <label>Telefone</label>
-                <input type="text" name="telefone" value="<%= m != null ? m.getTelefone() : "" %>" placeholder="(00) 00000-0000" />
+                <input type="text" name="telefone" data-mask="telefone" value="<%= m != null ? m.getTelefone() : "" %>" placeholder="(00) 00000-0000" maxlength="15" />
               </div>
             </div>
           </div>
@@ -84,7 +84,7 @@
               </div>
               <div class="form-group">
                 <label>Validade da CNH *</label>
-                <input type="date" name="cnhValidade" value="<%= m != null && m.getCnhValidade() != null ? m.getCnhValidade().toString() : "" %>" required />
+                <input type="date" name="cnhValidade" value="<%= m != null && m.getCnhValidade() != null ? m.getCnhValidade().toString() : "" %>" required min="2000-01-01" max="2099-12-31" />
               </div>
             </div>
           </div>
@@ -129,6 +129,6 @@
       </form>
     </main>
   </div>
-</div>
+<script src="${pageContext.request.contextPath}/js/masks.js"></script>
 </body>
 </html>
