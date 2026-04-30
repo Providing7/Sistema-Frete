@@ -88,6 +88,16 @@ public class VeiculoDAO {
         }
     }
 
+    // Atualizar status dentro de uma transação (recebe Connection externa)
+    public void atualizarStatus(Long id, StatusVeiculo status, Connection conn) throws SQLException {
+        String sql = "UPDATE veiculo SET status = ? WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status.name());
+            ps.setLong(2, id);
+            ps.executeUpdate();
+        }
+    }
+
     public boolean placaJaCadastrada(String placa, Long idIgnorar) throws SQLException {
         String sql = "SELECT 1 FROM veiculo WHERE placa = ? AND id != ? LIMIT 1";
         try (Connection conn = ConexaoDB.getConnection();
