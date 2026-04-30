@@ -1,34 +1,26 @@
-<%@ page contentType="text/html;charset=ISO-8859-1" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <meta charset="ISO-8859-1">
-  <title>Erro &#8212; Gestão de Fretes</title>
-  <style>
-    body { font-family: Arial, sans-serif; background:#f0f2f5;
-           display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
-    .box { background:white; padding:48px; border-radius:8px;
-           box-shadow:0 2px 10px rgba(0,0,0,.1); text-align:center; max-width:480px; }
-    h2 { color:#dc2626; }
-    p  { color:#555; margin:16px 0 32px; }
-    a  { background:#1a3a5c; color:white; padding:10px 24px;
-         border-radius:4px; text-decoration:none; font-size:14px; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Erro &mdash; GestÃ£o de Fretes</title>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
-  <div class="box">
-    <h2>Ops! Algo deu errado.</h2>
-    <p>
-      <%
-        String msg = (String) session.getAttribute("erroInesperado");
-        if (msg != null) { session.removeAttribute("erroInesperado"); out.print(msg); }
-        else { out.print("Ocorreu um erro inesperado. Tente novamente."); }
-      %>
-    </p>
-    <a href="${pageContext.request.contextPath}/dashboard">Voltar ao início</a>
+  <div class="error-page">
+    <div class="error-card">
+      <div class="error-icon">&#128679;</div>
+      <h2>Ops! Algo deu errado.</h2>
+      <p>
+        <%
+          String msg = (String) session.getAttribute("erroInesperado");
+          if (msg != null) { session.removeAttribute("erroInesperado"); out.print(msg); }
+          else { out.print("Ocorreu um erro inesperado. Por favor, tente novamente."); }
+        %>
+      </p>
+      <a class="btn btn-primary" href="${pageContext.request.contextPath}/dashboard">&larr; Voltar ao in&iacute;cio</a>
+    </div>
   </div>
 </body>
 </html>
-
-
-
