@@ -3,7 +3,7 @@ package br.com.gestaofretes.controller;
 import br.com.gestaofretes.bo.ClienteBO;
 import br.com.gestaofretes.exception.CadastroException;
 import br.com.gestaofretes.model.Cliente;
-import br.com.gestaofretes.model.TipoCliente;
+// ← import TipoCliente REMOVIDO
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,13 +24,13 @@ public class ClienteController extends HttpServlet {
 
         try {
             if ("novo".equals(acao)) {
-                req.setAttribute("tiposCliente", TipoCliente.values());
+                // ← sem tiposCliente
                 req.getRequestDispatcher("/WEB-INF/views/clientes/form.jsp").forward(req, resp);
 
             } else if ("editar".equals(acao)) {
                 Long id = Long.parseLong(req.getParameter("id"));
                 req.setAttribute("cliente", bo.buscarPorId(id));
-                req.setAttribute("tiposCliente", TipoCliente.values());
+                // ← sem tiposCliente
                 req.getRequestDispatcher("/WEB-INF/views/clientes/form.jsp").forward(req, resp);
 
             } else if ("excluir".equals(acao)) {
@@ -39,7 +39,6 @@ public class ClienteController extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/clientes?sucesso=Cliente+excluído+com+sucesso.");
 
             } else {
-                // Listagem com filtro e paginação
                 String filtro = req.getParameter("filtro");
                 int pagina = parsePagina(req.getParameter("pagina"));
                 int total = bo.contarTotal(filtro);
@@ -78,7 +77,7 @@ public class ClienteController extends HttpServlet {
         } catch (CadastroException e) {
             req.setAttribute("erro", e.getMessage());
             req.setAttribute("cliente", cliente);
-            req.setAttribute("tiposCliente", TipoCliente.values());
+            // ← sem tiposCliente
             req.getRequestDispatcher("/WEB-INF/views/clientes/form.jsp").forward(req, resp);
         } catch (Exception e) {
             req.getSession().setAttribute("erroInesperado", "Ocorreu um erro inesperado. Tente novamente.");
@@ -89,17 +88,13 @@ public class ClienteController extends HttpServlet {
     private Cliente montarCliente(HttpServletRequest req) {
         Cliente c = new Cliente();
         String idStr = req.getParameter("id");
-        if (idStr != null && !idStr.isEmpty()) {
-            c.setId(Long.parseLong(idStr));
-        }
+        if (idStr != null && !idStr.isEmpty()) c.setId(Long.parseLong(idStr));
+
         c.setRazaoSocial(req.getParameter("razaoSocial"));
         c.setNomeFantasia(req.getParameter("nomeFantasia"));
         c.setCnpj(req.getParameter("cnpj"));
         c.setInscricaoEstadual(req.getParameter("inscricaoEstadual"));
-        String tipoStr = req.getParameter("tipo");
-        if (tipoStr != null && !tipoStr.isEmpty()) {
-            c.setTipo(TipoCliente.valueOf(tipoStr));
-        }
+        // ← tipo REMOVIDO
         c.setLogradouro(req.getParameter("logradouro"));
         c.setNumero(req.getParameter("numero"));
         c.setComplemento(req.getParameter("complemento"));

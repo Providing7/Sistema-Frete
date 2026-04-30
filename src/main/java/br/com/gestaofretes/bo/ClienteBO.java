@@ -89,9 +89,6 @@ public class ClienteBO {
         if (!ValidadorCNPJ.isValido(c.getCnpj())) {
             throw new CadastroException("O CNPJ informado é inválido.");
         }
-        if (c.getTipo() == null) {
-            throw new CadastroException("O tipo do cliente é obrigatório.");
-        }
         try {
             if (dao.cnpjJaCadastrado(ValidadorCNPJ.limpar(c.getCnpj()), idIgnorar)) {
                 throw new CadastroException("Já existe um cliente cadastrado com este CNPJ.");

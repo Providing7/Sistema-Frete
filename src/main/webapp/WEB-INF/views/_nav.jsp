@@ -23,6 +23,12 @@
       <span class="nav-icon">&#127968;</span> Dashboard
     </a>
 
+    <div class="nav-section-title">Operacional</div>
+
+    <a href="<%= ctx %>/fretes" class="<%= uri.contains("/fretes") || uri.contains("/ocorrencias") ? "active" : "" %>">
+      <span class="nav-icon">&#128230;</span> Fretes
+    </a>
+
     <div class="nav-section-title">Cadastros</div>
 
     <a href="<%= ctx %>/clientes" class="<%= uri.contains("/clientes") ? "active" : "" %>">

@@ -45,12 +45,11 @@
             <div class="form-grid">
               <div class="form-group">
                 <label>Placa *</label>
-                <input type="text" name="placa" value="<%= v != null && v.getPlaca() != null ? v.getPlaca() : "" %>"
-                       placeholder="ABC1D23" required style="text-transform:uppercase;font-family:monospace;" />
+                <input type="text" name="placa" data-mask="placa" value="<%= v != null && v.getPlaca() != null ? v.getPlaca() : "" %>" placeholder="ABC1D23" required maxlength="7" style="text-transform:uppercase;font-family:monospace;" />
               </div>
               <div class="form-group">
                 <label>RNTRC</label>
-                <input type="text" name="rntrc" value="<%= v != null && v.getRntrc() != null ? v.getRntrc() : "" %>" placeholder="N&uacute;mero RNTRC" />
+                <input type="text" name="rntrc" data-mask="rntrc" value="<%= v != null && v.getRntrc() != null ? v.getRntrc() : "" %>" placeholder="Número RNTRC" maxlength="8" />
               </div>
               <div class="form-group">
                 <label>Tipo *</label>
@@ -67,8 +66,7 @@
               </div>
               <div class="form-group">
                 <label>Ano de Fabrica&ccedil;&atilde;o *</label>
-                <input type="number" name="anoFabricacao" value="<%= v != null ? v.getAnoFabricacao() : "" %>"
-                       min="1950" max="2030" required />
+                <input type="text" name="anoFabricacao" data-mask="ano" value="<%= v != null ? v.getAnoFabricacao() : "" %>" placeholder="2024" required maxlength="4" />
               </div>
             </div>
           </div>
@@ -78,15 +76,21 @@
             <div class="form-grid">
               <div class="form-group">
                 <label>Tara (kg)</label>
-                <input type="number" name="taraKg" step="0.01" value="<%= v != null ? v.getTaraKg() : "" %>" placeholder="0.00" />
+                <input type="text" name="taraKg" data-mask="decimal"
+                       value="<%= v != null && v.getTaraKg() > 0 ? String.format("%.2f", v.getTaraKg()) : "" %>"
+                       placeholder="0.00" maxlength="10" />
               </div>
               <div class="form-group">
                 <label>Capacidade de Carga (kg) *</label>
-                <input type="number" name="capacidadeKg" step="0.01" value="<%= v != null ? v.getCapacidadeKg() : "" %>" required placeholder="0.00" />
+                <input type="text" name="capacidadeKg" data-mask="decimal"
+                       value="<%= v != null && v.getCapacidadeKg() > 0 ? String.format("%.2f", v.getCapacidadeKg()) : "" %>"
+                       required placeholder="0.00" maxlength="10" />
               </div>
               <div class="form-group">
                 <label>Volume (m&sup3;)</label>
-                <input type="number" name="volumeM3" step="0.01" value="<%= v != null ? v.getVolumeM3() : "" %>" placeholder="0.00" />
+                <input type="text" name="volumeM3" data-mask="decimal"
+                       value="<%= v != null && v.getVolumeM3() > 0 ? String.format("%.2f", v.getVolumeM3()) : "" %>"
+                       placeholder="0.00" maxlength="10" />
               </div>
               <div class="form-group">
                 <label>Status</label>
@@ -113,5 +117,6 @@
     </main>
   </div>
 </div>
+<script src="${pageContext.request.contextPath}/js/masks.js"></script>
 </body>
 </html>

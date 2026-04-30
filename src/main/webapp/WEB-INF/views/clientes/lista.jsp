@@ -53,7 +53,6 @@
               <tr>
                 <th>Raz&atilde;o Social</th>
                 <th>CNPJ</th>
-                <th>Tipo</th>
                 <th>Munic&iacute;pio / UF</th>
                 <th>Contato</th>
                 <th>Status</th>
@@ -79,7 +78,6 @@
                   </div>
                 </td>
                 <td><span class="td-mono"><%= c.getCnpj() != null ? c.getCnpj() : "" %></span></td>
-                <td><%= c.getTipo() != null ? c.getTipo().name() : "" %></td>
                 <td><%= c.getMunicipio() != null ? c.getMunicipio() : "" %><%= c.getUf() != null ? " / " + c.getUf() : "" %></td>
                 <td style="font-size:12px;color:var(--gray-500);"><%= c.getEmail() != null ? c.getEmail() : "" %></td>
                 <td>
@@ -100,7 +98,7 @@
               <%   }
                 } else { %>
               <tr>
-                <td colspan="7">
+                <td colspan="6">
                   <div class="empty-state">
                     <div class="empty-state-icon">&#127970;</div>
                     <p>Nenhum cliente encontrado.</p>

@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="br.com.gestaofretes.model.Cliente, br.com.gestaofretes.model.TipoCliente" %>
+<%@ page import="br.com.gestaofretes.model.Cliente" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${cliente != null ? 'Editar' : 'Novo'} Cliente &mdash; Gestão de Fretes</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+  <script src="${pageContext.request.contextPath}/js/masks.js"></script>
 </head>
 <body>
 <div class="app-layout">
@@ -53,24 +54,12 @@
               </div>
               <div class="form-group">
                 <label>CNPJ *</label>
-                <input type="text" name="cnpj" value="${cliente.cnpj}" placeholder="00.000.000/0001-00" required />
+                <input type="text" name="cnpj" data-mask="cnpj"
+       				value="${cliente.cnpj}" placeholder="00.000.000/0001-00" required maxlength="18" />
               </div>
               <div class="form-group">
                 <label>Inscri&ccedil;&atilde;o Estadual</label>
                 <input type="text" name="inscricaoEstadual" value="${cliente.inscricaoEstadual}" />
-              </div>
-              <div class="form-group">
-                <label>Tipo *</label>
-                <select name="tipo" required>
-                  <option value="">Selecione...</option>
-                  <%
-                    TipoCliente[] tipos = (TipoCliente[]) request.getAttribute("tiposCliente");
-                    if (tipos != null) for (TipoCliente t : tipos) {
-                      boolean sel = c != null && t == c.getTipo();
-                  %>
-                  <option value="<%= t.name() %>" <%= sel ? "selected" : "" %>><%= t.name() %></option>
-                  <% } %>
-                </select>
               </div>
               <div class="form-group">
                 <label>Status</label>
@@ -112,7 +101,8 @@
               </div>
               <div class="form-group">
                 <label>CEP</label>
-                <input type="text" name="cep" value="${cliente.cep}" placeholder="00000-000" />
+                <input type="text" name="cep" data-mask="cep"
+       				value="${cliente.cep}" placeholder="00000-000" maxlength="9" />
               </div>
             </div>
           </div>
@@ -123,7 +113,8 @@
             <div class="form-grid">
               <div class="form-group">
                 <label>Telefone</label>
-                <input type="text" name="telefone" value="${cliente.telefone}" placeholder="(00) 00000-0000" />
+                <input type="text" name="telefone" data-mask="telefone"
+       				value="${cliente.telefone}" placeholder="(00) 00000-0000" maxlength="15" />
               </div>
               <div class="form-group">
                 <label>E-mail</label>
@@ -143,5 +134,6 @@
     </main>
   </div>
 </div>
+<script src="${pageContext.request.contextPath}/js/masks.js"></script>
 </body>
 </html>

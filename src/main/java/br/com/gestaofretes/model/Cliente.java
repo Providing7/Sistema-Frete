@@ -6,7 +6,6 @@ public class Cliente {
     private String nomeFantasia;
     private String cnpj;
     private String inscricaoEstadual;
-    private TipoCliente tipo;
     private String logradouro;
     private String numero;
     private String complemento;
@@ -32,9 +31,6 @@ public class Cliente {
 
     public String getInscricaoEstadual() { return inscricaoEstadual; }
     public void setInscricaoEstadual(String inscricaoEstadual) { this.inscricaoEstadual = inscricaoEstadual; }
-
-    public TipoCliente getTipo() { return tipo; }
-    public void setTipo(TipoCliente tipo) { this.tipo = tipo; }
 
     public String getLogradouro() { return logradouro; }
     public void setLogradouro(String logradouro) { this.logradouro = logradouro; }
