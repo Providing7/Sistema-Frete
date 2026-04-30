@@ -1,47 +1,97 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard — Gestão de Fretes</title>
-  <style>
-    * { box-sizing:border-box; margin:0; padding:0; }
-    body { font-family:Arial,sans-serif; background:#f0f2f5; }
-    .content { padding:40px; }
-    h2 { color:#1a3a5c; margin-bottom:8px; }
-    .subtitulo { color:#64748b; margin-bottom:32px; font-size:14px; }
-    .cards { display:flex; gap:24px; flex-wrap:wrap; }
-    .card { background:white; border-radius:8px; padding:24px 32px;
-            box-shadow:0 1px 4px rgba(0,0,0,.1); flex:1; min-width:180px;
-            border-left:4px solid #3b82f6; text-decoration:none; color:inherit;
-            transition:box-shadow .2s; }
-    .card:hover { box-shadow:0 4px 12px rgba(0,0,0,.15); }
-    .card h3 { font-size:14px; color:#64748b; margin-bottom:8px; }
-    .card .icone { font-size:28px; margin-bottom:8px; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard &mdash; Gestão de Fretes</title>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
+<div class="app-layout">
   <jsp:include page="/WEB-INF/views/_nav.jsp" />
-  <div class="content">
-    <h2>Bem-vindo, ${sessionScope.usuarioLogado}!</h2>
-    <p class="subtitulo">Selecione um módulo para começar.</p>
-    <div class="cards">
-      <a class="card" href="${pageContext.request.contextPath}/clientes">
-        <div class="icone">🏢</div>
-        <h3>Clientes</h3>
-        <span>Cadastrar e gerenciar tomadores de serviço</span>
-      </a>
-      <a class="card" href="${pageContext.request.contextPath}/motoristas">
-        <div class="icone">🚗</div>
-        <h3>Motoristas</h3>
-        <span>Cadastrar e gerenciar motoristas</span>
-      </a>
-      <a class="card" href="${pageContext.request.contextPath}/veiculos">
-        <div class="icone">🚚</div>
-        <h3>Veículos</h3>
-        <span>Cadastrar e gerenciar frota</span>
-      </a>
-    </div>
+
+  <div class="app-main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <span class="topbar-title">Dashboard</span>
+        <span class="topbar-breadcrumb">Vis&atilde;o geral do sistema</span>
+      </div>
+      <div class="topbar-right">
+        <span style="font-size:13px;color:var(--gray-500);">Ol&aacute;, <strong style="color:var(--gray-800);">${sessionScope.usuarioLogado}</strong> &#128075;</span>
+      </div>
+    </header>
+
+    <main class="page-body">
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <a class="stat-card" href="${pageContext.request.contextPath}/clientes">
+          <div class="stat-icon blue">&#127970;</div>
+          <div class="stat-info">
+            <div class="stat-value">&mdash;</div>
+            <div class="stat-label">Clientes cadastrados</div>
+          </div>
+        </a>
+        <a class="stat-card" href="${pageContext.request.contextPath}/motoristas">
+          <div class="stat-icon green">&#128100;</div>
+          <div class="stat-info">
+            <div class="stat-value">&mdash;</div>
+            <div class="stat-label">Motoristas ativos</div>
+          </div>
+        </a>
+        <a class="stat-card" href="${pageContext.request.contextPath}/veiculos">
+          <div class="stat-icon purple">&#128666;</div>
+          <div class="stat-info">
+            <div class="stat-value">&mdash;</div>
+            <div class="stat-label">Ve&iacute;culos na frota</div>
+          </div>
+        </a>
+        <div class="stat-card">
+          <div class="stat-icon orange">&#128203;</div>
+          <div class="stat-info">
+            <div class="stat-value">&mdash;</div>
+            <div class="stat-label">Fretes este m&ecirc;s</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Módulos -->
+      <div class="section-header">
+        <h2>M&oacute;dulos</h2>
+      </div>
+
+      <div class="module-grid">
+        <a class="module-card" href="${pageContext.request.contextPath}/clientes">
+          <div class="module-card-icon">&#127970;</div>
+          <div>
+            <h3>Clientes</h3>
+            <p>Cadastre e gerencie tomadores de servi&ccedil;o, contatos e endere&ccedil;os.</p>
+          </div>
+          <span class="module-card-arrow">&#8594;</span>
+        </a>
+
+        <a class="module-card" href="${pageContext.request.contextPath}/motoristas">
+          <div class="module-card-icon">&#128100;</div>
+          <div>
+            <h3>Motoristas</h3>
+            <p>Controle de CNH, v&iacute;nculo empregat&iacute;cio e status dos motoristas.</p>
+          </div>
+          <span class="module-card-arrow">&#8594;</span>
+        </a>
+
+        <a class="module-card" href="${pageContext.request.contextPath}/veiculos">
+          <div class="module-card-icon">&#128666;</div>
+          <div>
+            <h3>Ve&iacute;culos</h3>
+            <p>Frota completa com capacidade de carga, tipo e status de cada ve&iacute;culo.</p>
+          </div>
+          <span class="module-card-arrow">&#8594;</span>
+        </a>
+      </div>
+
+    </main>
   </div>
+</div>
 </body>
 </html>
