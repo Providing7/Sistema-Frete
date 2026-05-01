@@ -8,6 +8,8 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet("/veiculos")
 public class VeiculoController extends HttpServlet {
@@ -36,7 +38,7 @@ public class VeiculoController extends HttpServlet {
 
             } else if ("excluir".equals(acao)) {
                 bo.excluir(Long.parseLong(req.getParameter("id")));
-                resp.sendRedirect(req.getContextPath() + "/veiculos?sucesso=Veículo+excluído+com+sucesso.");
+                resp.sendRedirect(req.getContextPath() + "/veiculos?sucesso=" + URLEncoder.encode("Veículo excluído com sucesso.", StandardCharsets.UTF_8.name()));
 
             } else {
                 String filtro = req.getParameter("filtro");
@@ -69,10 +71,10 @@ public class VeiculoController extends HttpServlet {
         try {
             if (v.getId() == null) {
                 bo.cadastrar(v);
-                resp.sendRedirect(req.getContextPath() + "/veiculos?sucesso=Veículo+cadastrado+com+sucesso.");
+                resp.sendRedirect(req.getContextPath() + "/veiculos?sucesso=" + URLEncoder.encode("Veículo cadastrado com sucesso.", StandardCharsets.UTF_8.name()));
             } else {
                 bo.atualizar(v);
-                resp.sendRedirect(req.getContextPath() + "/veiculos?sucesso=Veículo+atualizado+com+sucesso.");
+                resp.sendRedirect(req.getContextPath() + "/veiculos?sucesso=" + URLEncoder.encode("Veículo atualizado com sucesso.", StandardCharsets.UTF_8.name()));
             }
         } catch (CadastroException e) {
             req.setAttribute("erro", e.getMessage());
@@ -101,13 +103,13 @@ public class VeiculoController extends HttpServlet {
         if (tipo != null && !tipo.isEmpty()) v.setTipo(TipoVeiculo.valueOf(tipo));
 
         String tara = req.getParameter("taraKg");
-        if (tara != null && !tara.isEmpty()) v.setTaraKg(Double.parseDouble(tara));
+        if (tara != null && !tara.isEmpty()) v.setTaraKg(Double.parseDouble(tara.replace(",", ".")));
 
         String cap = req.getParameter("capacidadeKg");
-        if (cap != null && !cap.isEmpty()) v.setCapacidadeKg(Double.parseDouble(cap));
+        if (cap != null && !cap.isEmpty()) v.setCapacidadeKg(Double.parseDouble(cap.replace(",", ".")));
 
         String vol = req.getParameter("volumeM3");
-        if (vol != null && !vol.isEmpty()) v.setVolumeM3(Double.parseDouble(vol));
+        if (vol != null && !vol.isEmpty()) v.setVolumeM3(Double.parseDouble(vol.replace(",", ".")));
 
         String status = req.getParameter("status");
         if (status != null && !status.isEmpty()) v.setStatus(StatusVeiculo.valueOf(status));
