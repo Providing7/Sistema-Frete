@@ -158,6 +158,30 @@ public class FreteDAO {
     }
 
     // ----------------------------------------------------------------
+    // Contagens para o dashboard
+    // ----------------------------------------------------------------
+    public int contarFretesNoMes() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM frete " +
+                     "WHERE EXTRACT(MONTH FROM data_emissao) = EXTRACT(MONTH FROM CURRENT_DATE) " +
+                     "AND EXTRACT(YEAR FROM data_emissao) = EXTRACT(YEAR FROM CURRENT_DATE)";
+        try (Connection conn = ConexaoDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+
+    public int contarFretesEmAberto() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM frete " +
+                     "WHERE status IN ('EMITIDO','SAIDA_CONFIRMADA','EM_TRANSITO')";
+        try (Connection conn = ConexaoDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+
+    // ----------------------------------------------------------------
     // Próximo sequencial para geração do número no BO
     // ----------------------------------------------------------------
     public int proximoSequencial(int ano) throws SQLException {
