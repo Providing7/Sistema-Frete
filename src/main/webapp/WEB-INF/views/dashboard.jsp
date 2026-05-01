@@ -26,35 +26,67 @@
 
       <!-- Stats -->
       <div class="stats-grid">
+
         <a class="stat-card" href="${pageContext.request.contextPath}/clientes">
           <div class="stat-icon blue">&#127970;</div>
           <div class="stat-info">
-            <div class="stat-value">&mdash;</div>
+            <div class="stat-value">
+              <%= request.getAttribute("totalClientes") != null ? request.getAttribute("totalClientes") : "&mdash;" %>
+            </div>
             <div class="stat-label">Clientes cadastrados</div>
           </div>
         </a>
+
         <a class="stat-card" href="${pageContext.request.contextPath}/motoristas">
           <div class="stat-icon green">&#128100;</div>
           <div class="stat-info">
-            <div class="stat-value">&mdash;</div>
-            <div class="stat-label">Motoristas ativos</div>
+            <div class="stat-value">
+              <%= request.getAttribute("totalMotoristas") != null ? request.getAttribute("totalMotoristas") : "&mdash;" %>
+            </div>
+            <div class="stat-label">Motoristas cadastrados</div>
           </div>
         </a>
+
         <a class="stat-card" href="${pageContext.request.contextPath}/veiculos">
           <div class="stat-icon purple">&#128666;</div>
           <div class="stat-info">
-            <div class="stat-value">&mdash;</div>
+            <div class="stat-value">
+              <%= request.getAttribute("totalVeiculos") != null ? request.getAttribute("totalVeiculos") : "&mdash;" %>
+            </div>
             <div class="stat-label">Ve&iacute;culos na frota</div>
           </div>
         </a>
-        <div class="stat-card">
+
+        <a class="stat-card" href="${pageContext.request.contextPath}/fretes">
           <div class="stat-icon orange">&#128203;</div>
           <div class="stat-info">
-            <div class="stat-value">&mdash;</div>
+            <div class="stat-value">
+              <%= request.getAttribute("fretesNoMes") != null ? request.getAttribute("fretesNoMes") : "&mdash;" %>
+            </div>
             <div class="stat-label">Fretes este m&ecirc;s</div>
           </div>
-        </div>
+        </a>
+
       </div>
+
+      <!-- Alerta fretes em andamento -->
+      <%
+        Object emAberto = request.getAttribute("fretesEmAberto");
+        if (emAberto != null && (Integer) emAberto > 0) {
+      %>
+      <div style="background:var(--warning-bg);border:1px solid var(--warning);border-radius:var(--radius-md);
+                  padding:14px 20px;display:flex;align-items:center;gap:12px;margin-bottom:24px;">
+        <span style="font-size:20px;">&#9888;</span>
+        <span style="font-size:14px;font-weight:600;color:var(--warning-dark);">
+          <%= emAberto %> frete<%= (Integer)emAberto > 1 ? "s" : "" %> em andamento
+          (Emitido / Sa&iacute;da Confirmada / Em Tr&acirc;nsito)
+        </span>
+        <a href="${pageContext.request.contextPath}/fretes"
+           style="margin-left:auto;font-size:13px;color:var(--warning-dark);text-decoration:underline;">
+          Ver fretes &rarr;
+        </a>
+      </div>
+      <% } %>
 
       <!-- Módulos -->
       <div class="section-header">
@@ -85,6 +117,15 @@
           <div>
             <h3>Ve&iacute;culos</h3>
             <p>Frota completa com capacidade de carga, tipo e status de cada ve&iacute;culo.</p>
+          </div>
+          <span class="module-card-arrow">&#8594;</span>
+        </a>
+
+        <a class="module-card" href="${pageContext.request.contextPath}/fretes">
+          <div class="module-card-icon">&#128230;</div>
+          <div>
+            <h3>Fretes</h3>
+            <p>Emiss&atilde;o, fluxo de status, ocorr&ecirc;ncias e rastreamento de cargas.</p>
           </div>
           <span class="module-card-arrow">&#8594;</span>
         </a>
