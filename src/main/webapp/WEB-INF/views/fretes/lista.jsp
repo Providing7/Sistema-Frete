@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List, br.com.gestaofretes.model.Frete, br.com.gestaofretes.model.StatusFrete" %>
+<%@ page import="java.util.List,br.com.gestaofretes.frete.Frete,br.com.gestaofretes.frete.StatusFrete" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>

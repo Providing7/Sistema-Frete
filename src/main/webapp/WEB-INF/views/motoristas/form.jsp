@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="br.com.gestaofretes.model.Motorista, br.com.gestaofretes.model.CategoriaCNH,
-                 br.com.gestaofretes.model.TipoVinculo, br.com.gestaofretes.model.StatusMotorista" %>
+<%@ page import="br.com.gestaofretes.motorista.Motorista,br.com.gestaofretes.motorista.CategoriaCNH,br.com.gestaofretes.motorista.TipoVinculo,br.com.gestaofretes.motorista.StatusMotorista" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
