@@ -92,7 +92,7 @@
                   <div class="td-actions">
                     <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/motoristas?acao=editar&id=<%= m.getId() %>">&#9999; Editar</a>
                     <a class="btn btn-danger btn-sm" href="${pageContext.request.contextPath}/motoristas?acao=excluir&id=<%= m.getId() %>"
-                       onclick="return confirm('Confirma a exclus&atilde;o?')">Excluir</a>
+                       onclick="return confirm('Deseja excluir?')">Excluir</a>
                   </div>
                 </td>
               </tr>

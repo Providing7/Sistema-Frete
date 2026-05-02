@@ -134,6 +134,5 @@
     </main>
   </div>
 </div>
-<script src="${pageContext.request.contextPath}/js/masks.js"></script>
 </body>
 </html>

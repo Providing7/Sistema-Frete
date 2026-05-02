@@ -87,6 +87,7 @@
                 <td>
                   <div class="td-actions">
                     <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/fretes?acao=detalhe&id=<%= f.getId() %>">&#128269; Detalhe</a>
+                    <a class="btn btn-danger btn-sm" href="${pageContext.request.contextPath}/fretes?acao=excluir&id=<%= f.getId() %>" onclick="return confirm('Deseja realmente excluir este frete?')">Excluir</a>
                   </div>
                 </td>
               </tr>
