@@ -6,6 +6,8 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet("/clientes")
 public class ClienteController extends HttpServlet {
@@ -33,7 +35,7 @@ public class ClienteController extends HttpServlet {
             } else if ("excluir".equals(acao)) {
                 Long id = Long.parseLong(req.getParameter("id"));
                 bo.excluir(id);
-                resp.sendRedirect(req.getContextPath() + "/clientes?sucesso=Cliente+excluído+com+sucesso.");
+                resp.sendRedirect(req.getContextPath() + "/clientes?sucesso=" + URLEncoder.encode("Cliente excluído com sucesso.", StandardCharsets.UTF_8.name()));
 
             } else {
                 String filtro = req.getParameter("filtro");
@@ -66,10 +68,10 @@ public class ClienteController extends HttpServlet {
         try {
             if (cliente.getId() == null) {
                 bo.cadastrar(cliente);
-                resp.sendRedirect(req.getContextPath() + "/clientes?sucesso=Cliente+cadastrado+com+sucesso.");
+                resp.sendRedirect(req.getContextPath() + "/clientes?sucesso=" + URLEncoder.encode("Cliente cadastrado com sucesso.", StandardCharsets.UTF_8.name()));
             } else {
                 bo.atualizar(cliente);
-                resp.sendRedirect(req.getContextPath() + "/clientes?sucesso=Cliente+atualizado+com+sucesso.");
+                resp.sendRedirect(req.getContextPath() + "/clientes?sucesso=" + URLEncoder.encode("Cliente atualizado com sucesso.", StandardCharsets.UTF_8.name()));
             }
         } catch (CadastroException e) {
             req.setAttribute("erro", e.getMessage());
