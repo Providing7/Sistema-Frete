@@ -22,6 +22,7 @@ public class AuthFilter implements Filter {
 
         // Recursos que NÃO precisam de login
         boolean isPublic = uri.contains("/login")
+                        || uri.contains("/usuarios")
                         || uri.endsWith(".css")
                         || uri.endsWith(".js")
                         || uri.endsWith(".png")
