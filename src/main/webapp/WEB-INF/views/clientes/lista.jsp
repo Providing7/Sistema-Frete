@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List, br.com.gestaofretes.model.Cliente" %>
+<%@ page import="java.util.List,br.com.gestaofretes.cliente.Cliente" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -91,7 +91,7 @@
                   <div class="td-actions">
                     <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/clientes?acao=editar&id=<%= c.getId() %>">&#9999; Editar</a>
                     <a class="btn btn-danger btn-sm" href="${pageContext.request.contextPath}/clientes?acao=excluir&id=<%= c.getId() %>"
-                       onclick="return confirm('Confirma a exclus&atilde;o do cliente?')">Excluir</a>
+                       onclick="return confirm('Deseja excluir?')">Excluir</a>
                   </div>
                 </td>
               </tr>

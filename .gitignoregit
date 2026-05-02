@@ -1,0 +1,1 @@
+# Build structure  !build/  !build/classes/  !build/classes/.gitkeep  add .gitignoregit add -f build/classes/.gitkeepgit commit -m "chore: Adicionar estrutura do diretorio build e excepcoes no gitignore"

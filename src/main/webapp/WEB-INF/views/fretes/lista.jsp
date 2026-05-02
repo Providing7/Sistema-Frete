@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List, br.com.gestaofretes.model.Frete, br.com.gestaofretes.model.StatusFrete" %>
+<%@ page import="java.util.List,br.com.gestaofretes.frete.Frete,br.com.gestaofretes.frete.StatusFrete" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -87,6 +87,7 @@
                 <td>
                   <div class="td-actions">
                     <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/fretes?acao=detalhe&id=<%= f.getId() %>">&#128269; Detalhe</a>
+                    <a class="btn btn-danger btn-sm" href="${pageContext.request.contextPath}/fretes?acao=excluir&id=<%= f.getId() %>" onclick="return confirm('Deseja realmente excluir este frete?')">Excluir</a>
                   </div>
                 </td>
               </tr>
