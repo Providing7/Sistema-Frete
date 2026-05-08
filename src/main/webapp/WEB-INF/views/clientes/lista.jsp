@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Clientes &mdash; Gestão de Fretes</title>
+  <title>Clientes &mdash; FretesTMS</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
@@ -16,33 +16,37 @@
     <header class="topbar">
       <div class="topbar-left">
         <span class="topbar-title">Clientes</span>
-        <span class="topbar-breadcrumb">Cadastro &rsaquo; Clientes</span>
+        <span class="topbar-breadcrumb">Cadastros &rsaquo; Clientes</span>
       </div>
       <div class="topbar-right">
-        <a class="btn btn-primary" href="${pageContext.request.contextPath}/clientes?acao=novo">&#43; Novo Cliente</a>
+        <a class="btn btn-primary" href="${pageContext.request.contextPath}/clientes?acao=novo">
+          <i class="bi bi-plus-lg"></i> Novo Cliente
+        </a>
       </div>
     </header>
 
     <main class="page-body">
 
       <% if (request.getAttribute("erro") != null) { %>
-        <div class="alert alert-error">&#9888; ${erro}</div>
+        <div class="alert alert-error"><i class="bi bi-exclamation-circle-fill"></i> ${erro}</div>
       <% } %>
       <% if (request.getParameter("sucesso") != null) { %>
-        <div class="alert alert-success">&#9989; ${param.sucesso}</div>
+        <div class="alert alert-success"><i class="bi bi-check-circle-fill"></i> ${param.sucesso}</div>
       <% } %>
 
       <div class="card">
         <div class="table-toolbar">
-          <span style="font-size:13px;font-weight:600;color:var(--gray-700);">Lista de Clientes</span>
+          <span class="table-toolbar-title">Tomadores de Servi&ccedil;o</span>
           <form method="get" action="${pageContext.request.contextPath}/clientes" style="display:flex;gap:8px;align-items:center;">
             <div class="search-box">
-              <span class="search-icon">&#128269;</span>
-              <input type="text" name="filtro" placeholder="Buscar por raz&atilde;o social..." value="${filtro}" />
+              <i class="bi bi-search search-icon"></i>
+              <input type="text" name="filtro" placeholder="Buscar por raz&atilde;o social ou CNPJ..." value="${filtro}" />
             </div>
             <button class="btn btn-secondary" type="submit">Buscar</button>
             <% if (request.getAttribute("filtro") != null && !((String)request.getAttribute("filtro")).isEmpty()) { %>
-              <a class="btn btn-secondary" href="${pageContext.request.contextPath}/clientes">&#10005; Limpar</a>
+              <a class="btn btn-secondary" href="${pageContext.request.contextPath}/clientes">
+                <i class="bi bi-x-lg"></i> Limpar
+              </a>
             <% } %>
           </form>
         </div>
@@ -54,7 +58,7 @@
                 <th>Raz&atilde;o Social</th>
                 <th>CNPJ</th>
                 <th>Munic&iacute;pio / UF</th>
-                <th>Contato</th>
+                <th>E-mail</th>
                 <th>Status</th>
                 <th>A&ccedil;&otilde;es</th>
               </tr>
@@ -77,9 +81,12 @@
                     </div>
                   </div>
                 </td>
-                <td><span class="td-mono"><%= c.getCnpj() != null ? c.getCnpj() : "" %></span></td>
-                <td><%= c.getMunicipio() != null ? c.getMunicipio() : "" %><%= c.getUf() != null ? " / " + c.getUf() : "" %></td>
-                <td style="font-size:12px;color:var(--gray-500);"><%= c.getEmail() != null ? c.getEmail() : "" %></td>
+                <td><span class="td-mono"><%= c.getCnpj() != null ? c.getCnpj() : "&mdash;" %></span></td>
+                <td>
+                  <%= c.getMunicipio() != null ? c.getMunicipio() : "" %>
+                  <%= c.getUf() != null ? " &mdash; " + c.getUf() : "" %>
+                </td>
+                <td class="text-muted"><%= c.getEmail() != null ? c.getEmail() : "&mdash;" %></td>
                 <td>
                   <% if (c.isAtivo()) { %>
                     <span class="badge badge-ativo">Ativo</span>
@@ -89,9 +96,15 @@
                 </td>
                 <td>
                   <div class="td-actions">
-                    <a class="btn btn-secondary btn-sm" href="${pageContext.request.contextPath}/clientes?acao=editar&id=<%= c.getId() %>">&#9999; Editar</a>
-                    <a class="btn btn-danger btn-sm" href="${pageContext.request.contextPath}/clientes?acao=excluir&id=<%= c.getId() %>"
-                       onclick="return confirm('Deseja excluir?')">Excluir</a>
+                    <a class="btn btn-secondary btn-sm"
+                       href="${pageContext.request.contextPath}/clientes?acao=editar&id=<%= c.getId() %>">
+                      <i class="bi bi-pencil"></i> Editar
+                    </a>
+                    <a class="btn btn-danger btn-sm"
+                       href="${pageContext.request.contextPath}/clientes?acao=excluir&id=<%= c.getId() %>"
+                       onclick="return confirm('Confirma a exclus\u00e3o deste cliente?')">
+                      <i class="bi bi-trash"></i>
+                    </a>
                   </div>
                 </td>
               </tr>
@@ -100,7 +113,7 @@
               <tr>
                 <td colspan="6">
                   <div class="empty-state">
-                    <div class="empty-state-icon">&#127970;</div>
+                    <i class="bi bi-building"></i>
                     <p>Nenhum cliente encontrado.</p>
                   </div>
                 </td>
@@ -116,13 +129,17 @@
           if (pagina != null && totalPaginas != null && totalPaginas > 1) {
         %>
         <div class="pagination-bar">
-          <span>P&aacute;gina <%= pagina %> de <%= totalPaginas %></span>
+          <span>P&aacute;gina <strong><%= pagina %></strong> de <strong><%= totalPaginas %></strong></span>
           <div class="pagination-controls">
             <% if (pagina > 1) { %>
-              <a class="btn btn-secondary btn-sm" href="?pagina=<%= pagina-1 %>&filtro=${filtro}">&larr; Anterior</a>
+              <a class="btn btn-secondary btn-sm" href="?pagina=<%= pagina-1 %>&filtro=${filtro}">
+                <i class="bi bi-chevron-left"></i> Anterior
+              </a>
             <% } %>
             <% if (pagina < totalPaginas) { %>
-              <a class="btn btn-secondary btn-sm" href="?pagina=<%= pagina+1 %>&filtro=${filtro}">Pr&oacute;xima &rarr;</a>
+              <a class="btn btn-secondary btn-sm" href="?pagina=<%= pagina+1 %>&filtro=${filtro}">
+                Pr&oacute;xima <i class="bi bi-chevron-right"></i>
+              </a>
             <% } %>
           </div>
         </div>
