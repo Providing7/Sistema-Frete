@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="romaneio" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="863db318-7682-4678-a5b8-15045c3312fa">
+	<parameter name="ID_MOTORISTA" class="java.lang.Long"/>
+	<parameter name="DATA_EMISSAO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+                f.numero,
+                rem.razao_social                               AS remetente,
+                dest.razao_social                              AS destinatario,
+                f.municipio_destino || ' / ' || f.uf_destino   AS destino,
+                f.descricao_carga,
+                f.peso_kg,
+                f.volumes,
+                f.valor_total,
+                f.status,
+                mot.nome                                       AS motorista,
+                mot.cnh_numero,
+                mot.cnh_categoria,
+                v.placa                                        AS veiculo_placa,
+                v.tipo                                         AS veiculo_tipo,
+                v.capacidade_kg
+            FROM frete f
+            JOIN cliente   rem  ON rem.id  = f.id_remetente
+            JOIN cliente   dest ON dest.id = f.id_destinatario
+            JOIN motorista mot  ON mot.id  = f.id_motorista
+            JOIN veiculo   v    ON v.id    = f.id_veiculo
+            WHERE f.id_motorista = $P{ID_MOTORISTA}
+              AND f.data_emissao = CAST($P{DATA_EMISSAO} AS DATE)
+            ORDER BY f.numero]]>
+	</queryString>
+	<field name="numero" class="java.lang.String"/>
+	<field name="remetente" class="java.lang.String"/>
+	<field name="destinatario" class="java.lang.String"/>
+	<field name="destino" class="java.lang.String"/>
+	<field name="descricao_carga" class="java.lang.String"/>
+	<field name="peso_kg" class="java.math.BigDecimal"/>
+	<field name="volumes" class="java.lang.Integer"/>
+	<field name="valor_total" class="java.math.BigDecimal"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="motorista" class="java.lang.String"/>
+	<field name="cnh_numero" class="java.lang.String"/>
+	<field name="cnh_categoria" class="java.lang.String"/>
+	<field name="veiculo_placa" class="java.lang.String"/>
+	<field name="veiculo_tipo" class="java.lang.String"/>
+	<field name="capacidade_kg" class="java.math.BigDecimal"/>
+	<variable name="TOTAL_PESO" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{peso_kg}]]></variableExpression>
+		<initialValueExpression><![CDATA[java.math.BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="TOTAL_VOLUMES" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{volumes}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="TOTAL_VALOR" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor_total}]]></variableExpression>
+		<initialValueExpression><![CDATA[java.math.BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<variable name="QTD_FRETES" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{numero}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<title>
+		<band height="70">
+			<staticText>
+				<reportElement x="0" y="0" width="782" height="28" uuid="1807961b-b0f8-4d1b-9f61-d5063db5a1ec"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Romaneio de Carga]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="100" height="16" uuid="6cc341f8-0cec-4f0d-ae9d-eca0051ee785"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data de Emissao:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="30" width="200" height="16" uuid="cbe10a2d-8815-40d8-bccd-7fbf28f9c906"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{DATA_EMISSAO}.length() == 10
+                        ? $P{DATA_EMISSAO}.substring(8,10) + "/" +
+                          $P{DATA_EMISSAO}.substring(5,7)  + "/" +
+                          $P{DATA_EMISSAO}.substring(0,4)
+                        : $P{DATA_EMISSAO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy &apos;as&apos; HH:mm">
+				<reportElement x="582" y="30" width="200" height="16" forecolor="#7F8C8D" uuid="a3e2dcd9-d95c-43df-94a7-fb3068a3189b"/>
+				<textElement textAlignment="Right">
+					<font size="8" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Gerado em: " + new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="50" width="782" height="1" forecolor="#2C3E50" uuid="a8345dc0-d0e5-4df3-ba55-5e61a484eb12"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="90" height="22" forecolor="#FFFFFF" backcolor="#2C3E50" uuid="a4b18928-3b0c-4266-812a-8ef8ec5d4240"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[  Nr Frete]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="90" y="0" width="125" height="22" forecolor="#FFFFFF" backcolor="#2C3E50" uuid="5a8cf61d-858c-4beb-94b4-791a27374045"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[  Remetente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="215" y="0" width="125" height="22" forecolor="#FFFFFF" backcolor="#2C3E50" uuid="a3cec867-4001-459a-aff6-fd8dce6bc1d3"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[  Destinatario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="340" y="0" width="155" height="22" forecolor="#FFFFFF" backcolor="#2C3E50" uuid="5ba17f93-11de-4c6f-9ba1-51c755338f63"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[  Descricao da Carga]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="495" y="0" width="90" height="22" forecolor="#FFFFFF" backcolor="#2C3E50" uuid="5320725e-fb8b-46e6-b13a-ea81bd8f843a"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[  Destino]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="585" y="0" width="65" height="22" forecolor="#FFFFFF" backcolor="#2C3E50" uuid="e2ddc45a-a547-4686-853b-8accd9f21cde"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Peso (kg)  ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="650" y="0" width="50" height="22" forecolor="#FFFFFF" backcolor="#2C3E50" uuid="87b9a01d-52c5-439e-9146-819baf3882c5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Volumes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="700" y="0" width="82" height="22" forecolor="#FFFFFF" backcolor="#2C3E50" uuid="42144275-1057-49d2-a3bc-cbdea454df82"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Total  ]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18">
+			<textField>
+				<reportElement x="0" y="0" width="90" height="18" uuid="99f334c5-5062-49c2-a460-355b7f2f6729"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  " + $F{numero}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="90" y="0" width="125" height="18" uuid="2509c70d-082e-437b-9f9e-b17715b97a24"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  " + $F{remetente}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="215" y="0" width="125" height="18" uuid="2f6a1e71-5280-4300-b254-e389e512af79"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  " + $F{destinatario}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="340" y="0" width="155" height="18" uuid="87284a4c-2acb-4b29-bd6a-97c1c727819b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  " + ($F{descricao_carga} != null ? $F{descricao_carga} : "")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="495" y="0" width="90" height="18" uuid="80f62740-5bc3-4af1-a9d7-d1909e046500"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  " + $F{destino}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="585" y="0" width="65" height="18" uuid="b75412b1-dc6b-4fab-927c-7f56dcfe93a5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{peso_kg}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="650" y="0" width="50" height="18" uuid="2665ad85-d2a4-4b17-b7df-353cf68749f5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{volumes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="R$ #,##0.00">
+				<reportElement x="700" y="0" width="82" height="18" uuid="c586fdf4-da36-40ed-a943-a45d0430b259"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="18">
+			<staticText>
+				<reportElement x="0" y="0" width="391" height="18" forecolor="#95A5A6" uuid="60b880a9-6b4e-4a35-aae7-7c092620eea5"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[  FretesTMS - Sistema de Gestao de Fretes]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="391" y="0" width="391" height="18" forecolor="#7F8C8D" uuid="f31687d2-a41b-4df8-bfb3-9d056c6e0571"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pagina " + $V{PAGE_NUMBER} + " de " + $V{PAGE_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="80">
+			<line>
+				<reportElement x="0" y="2" width="782" height="1" forecolor="#2C3E50" uuid="d020ca75-8ca8-447b-9741-993d271bda28"/>
+				<graphicElement>
+					<pen lineWidth="1.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="340" y="8" width="245" height="16" uuid="fbd37ceb-6297-4bac-9cce-b566a289d75b"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAIS DO ROMANEIO:  ]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="585" y="8" width="65" height="16" uuid="36b3f9d5-7173-4034-b2ce-4109904a70cc"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_PESO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="650" y="8" width="50" height="16" uuid="869efdda-12c4-402b-b830-92b916da8a2b"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_VOLUMES}]]></textFieldExpression>
+			</textField>
+			<textField pattern="R$ #,##0.00">
+				<reportElement x="700" y="8" width="82" height="16" uuid="7d7b1eef-ac7b-4372-bf93-b1fd60602aa0"/>
+				<textElement textAlignment="Right">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_VALOR}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="8" width="150" height="16" uuid="9810ee94-753a-4d24-a835-77f594521fb6"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total de Fretes:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="8" width="50" height="16" uuid="1aa648d9-21e7-4b2a-a911-23699ff33f1c"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{QTD_FRETES}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="30" width="80" height="14" uuid="cd80ff1b-3bfb-4fc8-a446-599266795c66"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Motorista:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="80" y="30" width="200" height="14" uuid="59f1162b-c08d-4024-905b-8150adfa62f1"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{motorista}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="30" width="60" height="14" uuid="27adea5d-1df8-412b-b012-cae44eb43e32"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CNH Nr:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="340" y="30" width="120" height="14" uuid="92bd31ea-a0db-4cdc-96b3-60501fdb5e39"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cnh_numero} + " - Cat. " + $F{cnh_categoria}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="48" width="80" height="14" uuid="98e8a761-9d09-41ca-8d7a-557cd35524ca"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Veiculo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="80" y="48" width="200" height="14" uuid="713df69b-527f-4d5b-a458-b6a51655ba93"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{veiculo_placa} + " (" + $F{veiculo_tipo} + ")"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="48" width="60" height="14" uuid="ad9ef54b-373e-4e8b-a1d6-ecd7ff2a2abe"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Capacidade:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00 &apos;kg&apos;">
+				<reportElement x="340" y="48" width="120" height="14" uuid="3ddbc3fc-8091-4731-aa8a-d5f1b6aef7e6"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{capacidade_kg}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="500" y="55" width="282" height="14" uuid="6d038aee-1b0a-4340-afe1-f30246a02d70"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[________________________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="500" y="68" width="282" height="12" forecolor="#7F8C8D" uuid="ab0873f3-8588-4647-b115-fb19b5233713"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Assinatura do Motorista]]></text>
+			</staticText>
+		</band>
+	</summary>
+	<noData>
+		<band height="80">
+			<staticText>
+				<reportElement x="0" y="10" width="782" height="30" forecolor="#E74C3C" uuid="a1b2c3d4-e5f6-7890-abcd-ef1234567801"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nenhum frete encontrado para os filtros informados.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="45" width="782" height="20" forecolor="#7F8C8D" uuid="b2c3d4e5-f6a7-8901-bcde-f12345678902"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Verifique se existem fretes cadastrados para o motorista e data selecionados.]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

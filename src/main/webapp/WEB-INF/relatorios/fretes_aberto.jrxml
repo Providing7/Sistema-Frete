@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fretes_aberto" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="9918de00-5255-4946-bbdd-83e15adf7088">
+	<queryString>
+		<![CDATA[SELECT
+	f.numero,
+	rem.razao_social AS remetente,
+	dest.razao_social AS destinatario,
+	mot.nome AS motorista,
+	f.municipio_destino ||'/'||f.uf_destino AS destino,
+	f.data_previsao_entrega,
+	f.valor_total,
+	f.status,
+	CASE
+		WHEN f.data_previsao_entrega < CURRENT_DATE
+		THEN (CURRENT_DATE - f.data_previsao_entrega)
+		ELSE 0
+	 END AS dias_atraso
+	FROM frete f
+	JOIN cliente rem ON rem.id = f.id_remetente
+	JOIN cliente dest ON dest.id = f.id_destinatario
+	JOIN motorista mot ON mot.id = f.id_motorista
+	WHERE f.status IN ('EMITIDO', 'SAIDA_CONFIRMADA', 'EM_TRANSITO')
+	ORDER BY f.data_previsao_entrega ASC]]>
+	</queryString>
+	<field name="numero" class="java.lang.String"/>
+	<field name="remetente" class="java.lang.String"/>
+	<field name="destinatario" class="java.lang.String"/>
+	<field name="motorista" class="java.lang.String"/>
+	<field name="destino" class="java.lang.String"/>
+	<field name="data_previsao_entrega" class="java.sql.Date"/>
+	<field name="valor_total" class="java.math.BigDecimal"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="dias_atraso" class="java.lang.Integer"/>
+	<variable name="TOTAL_VALOR" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor_total}]]></variableExpression>
+		<initialValueExpression><![CDATA[java.math.BigDecimal.ZERO]]></initialValueExpression>
+	</variable>
+	<title>
+		<band height="55">
+			<staticText>
+				<reportElement x="0" y="0" width="782" height="30" uuid="07f6cfe2-90b1-4a30-8b79-63b20e759b9d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fretes em Aberto]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy &apos;às&apos; HH:mm">
+				<reportElement x="0" y="33" width="782" height="15" uuid="c7815149-16e3-4ab6-a29b-cdeb2b5d08a1"/>
+				<textElement textAlignment="Center">
+					<font size="9" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Relatório gerado em: " + new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="95" height="22" forecolor="#FFFFFF" backcolor="#2C3E50" uuid="127a2e7d-816d-4db9-831d-fd9a95686f52"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[  Nr Frete]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="95" y="0" width="140" height="22" forecolor="#FFFFFF" backcolor="#2C3E50" uuid="9f6d0f45-7cc0-446f-8bf3-5a3f6c97187d"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[  Remetente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="235" y="0" width="140" height="22" forecolor="#FFFFFF" backcolor="#2C3E50" uuid="b73350be-0d57-43c3-b435-973d4a75f6be"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[  Destinatario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="375" y="0" width="120" height="22" forecolor="#FFFFFF" backcolor="#2C3E50" uuid="ed5667fa-3c14-4892-b678-d5956ed0aa59"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[  Motorista]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="495" y="0" width="100" height="22" forecolor="#FFFFFF" backcolor="#2C3E50" uuid="95b76d51-8782-48a1-9b3d-66f916450aa7"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[  Destino]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="595" y="0" width="75" height="22" forecolor="#FFFFFF" backcolor="#2C3E50" uuid="b4eaed1b-443b-49d5-aad7-9c8928b6dcf9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Prev. Entrega]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="670" y="0" width="55" height="22" forecolor="#FFFFFF" backcolor="#E74C3C" uuid="329ba41b-1ea8-4af4-a7b2-eb6ce20e69cc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Atraso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="725" y="0" width="57" height="22" forecolor="#FFFFFF" backcolor="#2C3E50" uuid="b4dcb7c6-8199-4b8f-ae00-36f4d1ce1753"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor  ]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18">
+			<textField>
+				<reportElement x="0" y="0" width="95" height="18" uuid="88f6d90c-eff3-479b-862c-1f7e50a8e1ff"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  " + $F{numero}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="95" y="0" width="140" height="18" uuid="542268da-d801-42b0-a340-183f36e1c4b8"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  " + $F{remetente}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="235" y="0" width="140" height="18" uuid="863dc85e-0bd9-4277-94bf-2320c70c712a"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  " + $F{destinatario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="375" y="0" width="120" height="18" uuid="348ffce6-49c3-4d90-8504-6d3717cc23fd"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  " + $F{motorista}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="495" y="0" width="100" height="18" uuid="dc6aa5bb-e122-4e1e-90ac-f7d6ef6d2e77"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  " + $F{destino}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="595" y="0" width="75" height="18" uuid="8d8341fc-c88b-44fb-95c3-10ce36ae13c2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_previsao_entrega}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="670" y="0" width="55" height="18" forecolor="#E74C3C" uuid="d50cf001-d3e1-46cf-94bc-5d46b1f028d7">
+					<printWhenExpression><![CDATA[$F{dias_atraso} > 0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dias_atraso} + " dias"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="670" y="0" width="55" height="18" forecolor="#95A5A6" uuid="8071f43e-77f3-49f7-be91-527a57d23a22">
+					<printWhenExpression><![CDATA[$F{dias_atraso} == 0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<textField pattern="R$ #,##0.00">
+				<reportElement x="725" y="0" width="57" height="18" uuid="9378b6fd-e5c6-4940-a381-2e845b85841a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="18">
+			<textField>
+				<reportElement x="0" y="0" width="782" height="18" forecolor="#7F8C8D" uuid="f0580ff0-ab49-488b-b3e8-661f42b90156"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pagina " + $V{PAGE_NUMBER} + " de " + $V{PAGE_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="30">
+			<line>
+				<reportElement x="595" y="2" width="187" height="1" uuid="dbddda3e-b72e-47a7-9d57-31e447bd7485"/>
+			</line>
+			<staticText>
+				<reportElement x="595" y="6" width="130" height="20" uuid="5820faef-23fa-472f-975d-df6b5104e852"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VALOR TOTAL GERAL:  ]]></text>
+			</staticText>
+			<textField pattern="R$ #,##0.00">
+				<reportElement x="725" y="6" width="57" height="20" uuid="cfb21e5a-1faf-4537-9165-ecd5f2ed8733"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_VALOR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
