@@ -128,4 +128,20 @@ public class MotoristaDAO {
         m.setStatus(StatusMotorista.valueOf(rs.getString("status")));
         return m;
     }
+    
+    public List<Motorista> listarAtivos() throws SQLException {
+        List<Motorista> lista = new ArrayList<>();
+        String sql = "SELECT id, nome FROM motorista WHERE status = 'ATIVO' ORDER BY nome";
+        try (Connection conn = ConexaoDB.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Motorista m = new Motorista();
+                m.setId(rs.getLong("id"));
+                m.setNome(rs.getString("nome"));
+                lista.add(m);
+            }
+        }
+        return lista;
+    }
 }
