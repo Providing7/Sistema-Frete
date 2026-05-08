@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="br.com.gestaofretes.model.Veiculo, br.com.gestaofretes.model.TipoVeiculo,
-                 br.com.gestaofretes.model.StatusVeiculo" %>
+<%@ page import="br.com.gestaofretes.veiculo.Veiculo,br.com.gestaofretes.veiculo.TipoVeiculo,br.com.gestaofretes.veiculo.StatusVeiculo" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>

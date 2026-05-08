@@ -4,47 +4,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login &mdash; Gestão de Fretes</title>
+  <title>Acesso &mdash; FretesTMS</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
 <body>
 <div class="login-page">
 
-  <!-- Painel esquerdo: hero -->
   <div class="login-panel-left">
-    <div class="login-hero-icon">&#128666;</div>
+    <div class="login-hero-badge">
+      <i class="bi bi-truck-front-fill"></i> FretesTMS
+    </div>
     <h1 class="login-hero-title">
-      Gestão de<br><span>Fretes</span>
+      Controle total<br>sobre seus <span>fretes</span>
     </h1>
     <p class="login-hero-sub">
-      Gerencie clientes, motoristas e frota em um único lugar.
-      Simples, r&aacute;pido e eficiente.
+      Plataforma integrada para gest&atilde;o do ciclo de vida do transporte:
+      emiss&atilde;o, rastreamento e relat&oacute;rios gerenciais.
     </p>
+    <ul class="login-features">
+      <li><i class="bi bi-check-circle-fill"></i> Cadastro de clientes, motoristas e frota</li>
+      <li><i class="bi bi-check-circle-fill"></i> Emiss&atilde;o e controle de fretes (FRT)</li>
+      <li><i class="bi bi-check-circle-fill"></i> Fluxo de status e ocorr&ecirc;ncias</li>
+      <li><i class="bi bi-check-circle-fill"></i> Relat&oacute;rios JasperReports</li>
+    </ul>
   </div>
 
-  <!-- Painel direito: formulário -->
   <div class="login-panel-right">
     <div class="login-form-wrapper">
+
+      <div class="login-brand">
+        <div class="login-brand-icon"><i class="bi bi-truck-front-fill"></i></div>
+        <span class="login-brand-name">FretesTMS</span>
+      </div>
+
       <div class="login-form-header">
-        <h2>Bem-vindo de volta</h2>
-        <p>Fa&ccedil;a login para acessar o sistema</p>
+        <h2>Entrar no sistema</h2>
+        <p>Informe suas credenciais para continuar.</p>
       </div>
 
       <% if (request.getAttribute("erro") != null) { %>
-        <div class="alert alert-error">&#9888; ${erro}</div>
+        <div class="alert alert-error" style="margin-bottom:20px;">
+          <i class="bi bi-exclamation-circle-fill"></i> ${erro}
+        </div>
+      <% } %>
+      <% if (request.getParameter("sucesso") != null) { %>
+        <div class="alert alert-success" style="margin-bottom:20px;">
+          <i class="bi bi-check-circle-fill"></i> ${param.sucesso}
+        </div>
       <% } %>
 
       <form class="login-form" method="post" action="${pageContext.request.contextPath}/login">
         <div class="login-field">
-          <label for="usuario">Usu&aacute;rio</label>
-          <input type="text" id="usuario" name="usuario" placeholder="Digite seu usu&aacute;rio" required autofocus />
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" placeholder="seu@email.com" required autofocus />
         </div>
         <div class="login-field">
           <label for="senha">Senha</label>
-          <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required />
+          <input type="password" id="senha" name="senha" placeholder="Sua senha" required />
         </div>
-        <button class="login-submit" type="submit">Entrar no sistema &rarr;</button>
+        <button class="login-submit" type="submit">
+          <i class="bi bi-box-arrow-in-right"></i> Entrar
+        </button>
       </form>
+
+      <div class="login-footer">
+        Sem acesso?
+        <a href="${pageContext.request.contextPath}/usuarios?acao=novo">Solicitar cadastro</a>
+      </div>
+
     </div>
   </div>
 

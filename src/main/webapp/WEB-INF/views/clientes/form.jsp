@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="br.com.gestaofretes.model.Cliente" %>
+<%@ page import="br.com.gestaofretes.cliente.Cliente" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -134,6 +134,5 @@
     </main>
   </div>
 </div>
-<script src="${pageContext.request.contextPath}/js/masks.js"></script>
 </body>
 </html>

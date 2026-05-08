@@ -126,3 +126,21 @@ VALUES
   ('FRT-2026-00005', 3, 1, 2, 1, 'Belo Horizonte','MG','São Paulo','SP',
    'Equipamentos', 3000, 8, 1500.00, 12.00, 180.00, 1680.00,
    'CANCELADO', '2026-04-10', '2026-04-14');
+
+-- ============================================================
+-- TABELA DE USUÁRIOS (autenticação real com senha criptografada)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS usuario (
+    id             SERIAL PRIMARY KEY,
+    login          VARCHAR(100) NOT NULL UNIQUE,  -- armazena o e-mail
+    email          VARCHAR(100) NOT NULL UNIQUE,
+    senha_hash     VARCHAR(255) NOT NULL,
+    nome_completo  VARCHAR(150),
+    ativo          BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+-- Usuário admin padrão.
+-- IMPORTANTE: após o primeiro acesso, altere a senha pelo sistema.
+-- Para criar o usuário admin (ou qualquer outro), execute a classe SeedUsuario
+-- (Rodar como Java Application) ou insira manualmente o hash gerado no banco.
+
