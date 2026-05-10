@@ -37,7 +37,6 @@ public class DashboardController extends HttpServlet {
             req.setAttribute("totalVeiculos",   veiculoDAO.contarTotal(null));
             req.setAttribute("fretesNoMes",     freteDAO.contarFretesNoMes());
             req.setAttribute("fretesEmAberto",  freteDAO.contarFretesEmAberto());
-            req.setAttribute("motoristasAlertaCNH", motoristaDAO.listarComCNHCritica(30));
         } catch (Exception e) {
             LOG.severe("Erro ao carregar dados do dashboard: " + e.getMessage());
         }

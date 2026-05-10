@@ -49,11 +49,6 @@
     <a href="<%= ctx %>/relatorios/romaneio" class="<%= uri.contains("/relatorios/romaneio") ? "active" : "" %>">
       <i class="bi bi-printer nav-icon"></i> Romaneio de Carga
     </a>
-    
-    <a class="nav-link" href="${pageContext.request.contextPath}/relatorios/faturamento">
-  	  <i class="bi bi-graph-up-arrow"></i>
-  		<span>Faturamento</span>
-	</a>
   </nav>
 
   <div class="sidebar-footer">

@@ -144,20 +144,4 @@ public class MotoristaDAO {
         }
         return lista;
     }
-    public List<Motorista> listarComCNHCritica(int diasAlerta) throws SQLException {
-        String sql = "SELECT * FROM motorista " +
-                     "WHERE status = 'ATIVO' " +
-                     "  AND cnh_validade IS NOT NULL " +
-                     "  AND cnh_validade <= CURRENT_DATE + CAST(? AS INT) * INTERVAL '1 day' " +
-                     "ORDER BY cnh_validade ASC";
-        List<Motorista> lista = new ArrayList<>();
-        try (Connection conn = ConexaoDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, diasAlerta);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) lista.add(mapear(rs));
-            }
-        }
-        return lista;
-    }
 }

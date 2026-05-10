@@ -26,38 +26,28 @@ public class RelatorioController extends HttpServlet {
         String pathInfo = req.getPathInfo(); // /fretes-aberto  ou  /romaneio
 
         try {
-        	if ("/fretes-aberto".equals(pathInfo)) {
-        	    gerarFretesAberto(req, resp);
+            if ("/fretes-aberto".equals(pathInfo)) {
+                gerarFretesAberto(req, resp);
 
-        	} else if ("/romaneio".equals(pathInfo)) {
-        	    String idMotorista = req.getParameter("idMotorista");
-        	    String data        = req.getParameter("data");
+            } else if ("/romaneio".equals(pathInfo)) {
+                String idMotorista = req.getParameter("idMotorista");
+                String data        = req.getParameter("data");
 
-        	    if (idMotorista == null || idMotorista.isEmpty()
-        	            || data == null || data.isEmpty()) {
-        	        req.setAttribute("motoristas", bo.listarMotoristasAtivos());
-        	        req.setAttribute("romaneiosDisponiveis", bo.listarRomaneiosDisponiveis());
-        	        req.getRequestDispatcher(
-        	            "/WEB-INF/views/relatorios/filtroRomaneio.jsp").forward(req, resp);
-        	        return;
-        	    }
-        	    gerarRomaneio(req, resp, idMotorista, data);
+                if (idMotorista == null || idMotorista.isEmpty()
+                        || data == null || data.isEmpty()) {
+                    // Exibe tela de filtro com lista de romaneios disponíveis
+                    req.setAttribute("motoristas", bo.listarMotoristasAtivos());
+                    req.setAttribute("romaneiosDisponiveis", bo.listarRomaneiosDisponiveis());
+                    req.getRequestDispatcher(
+                        "/WEB-INF/views/relatorios/filtroRomaneio.jsp").forward(req, resp);
+                    return;
+                }
 
-        	} else if ("/faturamento".equals(pathInfo)) {
-        	    String dataInicio = req.getParameter("dataInicio");
-        	    String dataFim    = req.getParameter("dataFim");
+                gerarRomaneio(req, resp, idMotorista, data);
 
-        	    if (dataInicio == null || dataInicio.isEmpty()
-        	            || dataFim == null || dataFim.isEmpty()) {
-        	        req.getRequestDispatcher(
-        	            "/WEB-INF/views/relatorios/filtroFaturamento.jsp").forward(req, resp);
-        	        return;
-        	    }
-        	    gerarFaturamento(req, resp, dataInicio, dataFim);
-
-        	} else {
-        	    resp.sendRedirect(req.getContextPath() + "/dashboard");
-        	}
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/dashboard");
+            }
 
         } catch (NegocioException e) {
             req.setAttribute("erro", e.getMessage());
@@ -87,7 +77,7 @@ public class RelatorioController extends HttpServlet {
 
         // Relatório 2 — Romaneio de Carga
     private void gerarRomaneio(HttpServletRequest req, HttpServletResponse resp,
-             String idMotorista, String data) throws Exception {
+                                String idMotorista, String data) throws Exception {
 
         Map<String, Object> params = new HashMap<>();
         params.put("ID_MOTORISTA", Long.parseLong(idMotorista));
@@ -96,19 +86,6 @@ public class RelatorioController extends HttpServlet {
         try (Connection conn = ConexaoDB.getConnection()) {
             gerarPdf(req, resp, conn, "romaneio.jrxml", params, "romaneio.pdf");
         }
-    }
-    
- // Relatório 3 — Faturamento por Período
-    private void gerarFaturamento(HttpServletRequest req, HttpServletResponse resp,
-                                   String dataInicio, String dataFim) throws Exception {
-        Map<String, Object> params = new HashMap<>();
-        params.put("DATA_INICIO", dataInicio);
-        params.put("DATA_FIM",    dataFim);
-
-        try (Connection conn = ConexaoDB.getConnection()) {
-            gerarPdf(req, resp, conn, "faturamento.jrxml", params,
-                     "faturamento_" + dataInicio + "_" + dataFim + ".pdf");
-    	}
     }
 
     // Método genérico de geração de PDF
