@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="br.com.gestaofretes.motorista.Motorista, java.util.List, java.time.LocalDate" %>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -89,7 +90,63 @@
         </a>
       </div>
       <% } %>
-
+      
+      <%
+  List<Motorista> alertaCNH =
+      (List<Motorista>) request.getAttribute("motoristasAlertaCNH");
+  if (alertaCNH != null && !alertaCNH.isEmpty()) {
+      LocalDate hoje = LocalDate.now();
+%>
+<div class="card" style="margin-bottom:24px;border-left:4px solid #E67E22;">
+  <div style="padding:14px 20px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;gap:8px;">
+    <i class="bi bi-exclamation-triangle-fill" style="color:#E67E22;font-size:16px;"></i>
+    <span style="font-size:13px;font-weight:600;color:#E67E22;">
+      Aten&ccedil;&atilde;o: <%= alertaCNH.size() %>
+      motorista<%= alertaCNH.size() > 1 ? "s" : "" %>
+      com CNH vencida ou a vencer em 30 dias
+    </span>
+  </div>
+  <table class="data-table" style="margin:0;">
+    <thead>
+      <tr>
+        <th>Motorista</th>
+        <th>CNH N&ordm;</th>
+        <th>Validade</th>
+        <th>Situa&ccedil;&atilde;o</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for (Motorista mc : alertaCNH) {
+           boolean vencida = mc.getCnhValidade() != null && mc.getCnhValidade().isBefore(hoje);
+           long diasRestantes = mc.getCnhValidade() != null
+               ? java.time.temporal.ChronoUnit.DAYS.between(hoje, mc.getCnhValidade()) : 0;
+      %>
+      <tr>
+        <td><%= mc.getNome() %></td>
+        <td><%= mc.getCnhNumero() != null ? mc.getCnhNumero() : "&mdash;" %></td>
+        <td><%= mc.getCnhValidade() != null
+                ? mc.getCnhValidade().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                : "&mdash;" %></td>
+        <td>
+          <% if (vencida) { %>
+            <span class="badge badge-cancelado">VENCIDA</span>
+          <% } else { %>
+            <span class="badge badge-em_transito">Vence em <%= diasRestantes %> dia<%= diasRestantes != 1 ? "s" : "" %></span>
+          <% } %>
+        </td>
+        <td>
+          <a href="${pageContext.request.contextPath}/motoristas?acao=editar&id=<%= mc.getId() %>"
+             class="btn btn-secondary" style="font-size:11px;padding:4px 10px;">
+            <i class="bi bi-pencil"></i> Atualizar CNH
+          </a>
+        </td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+<% } %>
       <!-- Módulos -->
       <div class="section-header">
         <h2>M&oacute;dulos do sistema</h2>
