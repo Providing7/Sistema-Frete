@@ -1,10 +1,10 @@
-# 🚛 Sistema de Gestão de Fretes
+#  Sistema de Gestão de Fretes
 
 Sistema web para gerenciamento completo de operações de transporte de carga, desenvolvido em Java com arquitetura MVC clássica e deploy em Apache Tomcat.
 
 ---
 
-## 📋 Funcionalidades
+##  Funcionalidades
 
 | Módulo | Descrição |
 |---|---|
@@ -20,7 +20,7 @@ Sistema web para gerenciamento completo de operações de transporte de carga, d
 
 ---
 
-## 🗂️ Estrutura do Projeto
+##  Estrutura do Projeto
 
 ```
 Sis-gestao-fretes/
@@ -53,7 +53,7 @@ Sis-gestao-fretes/
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+##  Tecnologias Utilizadas
 
 - **Java 8** — linguagem principal
 - **Jakarta Servlet / JSP** — MVC sem framework adicional
@@ -76,7 +76,7 @@ Sis-gestao-fretes/
 
 ---
 
-## 🚀 Configuração e Execução
+##  Configuração e Execução
 
 ### 1. Banco de dados
 
@@ -131,7 +131,7 @@ VALUES ('admin@email.com', 'admin@email.com', '$2a$12$...hash...', 'Administrado
 
 ---
 
-## 📊 Modelo de Dados (resumo)
+##  Modelo de Dados (resumo)
 
 ```
 cliente ──────────────────────────────────────────────┐
@@ -151,7 +151,7 @@ usuario  (autenticação independente)
 
 ---
 
-## 📨 Alertas de CNH
+##  Alertas de CNH
 
 O módulo `mensageria` possui um scheduler que verifica automaticamente os motoristas com CNH próxima do vencimento e registra notificações na tabela `notificacao_motorista` com os níveis:
 
@@ -165,14 +165,14 @@ As notificações são exibidas na tela **Alertas de CNH** dentro do sistema.
 
 ---
 
-## 📄 Relatórios Disponíveis
+##  Relatórios Disponíveis
 
 - **Romaneio de Carga** — listagem de fretes disponíveis para despacho
 - **Faturamento** — relatório de receita por período, gerado em PDF
 
 ---
 
-## 🤝 Contribuindo
+##  Contribuindo
 
 1. Faça um *fork* do repositório
 2. Crie uma branch para sua feature: `git checkout -b feature/minha-feature`
@@ -182,6 +182,4 @@ As notificações são exibidas na tela **Alertas de CNH** dentro do sistema.
 
 ---
 
-## 📝 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
