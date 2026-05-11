@@ -1350,3 +1350,54 @@ tr.hide { display: none; }
   color: #784212;
   font-weight: 600;
 }
+
+/* ============================================
+   GRÁFICOS DO DASHBOARD
+   ============================================ */
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 20px;
+  margin-bottom: 0;
+}
+
+.chart-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 240px;
+}
+
+.chart-wrapper-sm {
+  height: 220px;
+}
+
+.mapa-rotas {
+  height: 420px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #f4f7fb;
+}
+
+@media (max-width: 900px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+}

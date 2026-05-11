@@ -31,17 +31,18 @@ public class RelatorioController extends HttpServlet {
 
         	} else if ("/romaneio".equals(pathInfo)) {
         	    String idMotorista = req.getParameter("idMotorista");
-        	    String data        = req.getParameter("data");
+        	    String dataInicio  = req.getParameter("dataInicio");
+        	    String dataFim     = req.getParameter("dataFim");
 
         	    if (idMotorista == null || idMotorista.isEmpty()
-        	            || data == null || data.isEmpty()) {
+        	            || dataInicio == null || dataInicio.isEmpty()
+        	            || dataFim == null || dataFim.isEmpty()) {
         	        req.setAttribute("motoristas", bo.listarMotoristasAtivos());
-        	        req.setAttribute("romaneiosDisponiveis", bo.listarRomaneiosDisponiveis());
         	        req.getRequestDispatcher(
         	            "/WEB-INF/views/relatorios/filtroRomaneio.jsp").forward(req, resp);
         	        return;
         	    }
-        	    gerarRomaneio(req, resp, idMotorista, data);
+        	    gerarRomaneio(req, resp, idMotorista, dataInicio, dataFim);
 
         	} else if ("/faturamento".equals(pathInfo)) {
         	    String dataInicio = req.getParameter("dataInicio");
@@ -63,7 +64,6 @@ public class RelatorioController extends HttpServlet {
             req.setAttribute("erro", e.getMessage());
             try {
                 req.setAttribute("motoristas", bo.listarMotoristasAtivos());
-                req.setAttribute("romaneiosDisponiveis", bo.listarRomaneiosDisponiveis());
             } catch (Exception ignored) { }
             req.getRequestDispatcher(
                 "/WEB-INF/views/relatorios/filtroRomaneio.jsp").forward(req, resp);
@@ -87,11 +87,12 @@ public class RelatorioController extends HttpServlet {
 
         // Relatório 2 — Romaneio de Carga
     private void gerarRomaneio(HttpServletRequest req, HttpServletResponse resp,
-             String idMotorista, String data) throws Exception {
+             String idMotorista, String dataInicio, String dataFim) throws Exception {
 
         Map<String, Object> params = new HashMap<>();
         params.put("ID_MOTORISTA", Long.parseLong(idMotorista));
-        params.put("DATA_EMISSAO", data);
+        params.put("DATA_INICIO", dataInicio);
+        params.put("DATA_FIM",    dataFim);
 
         try (Connection conn = ConexaoDB.getConnection()) {
             gerarPdf(req, resp, conn, "romaneio.jrxml", params, "romaneio.pdf");
