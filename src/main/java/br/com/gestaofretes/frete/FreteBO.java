@@ -23,9 +23,7 @@ public class FreteBO {
     private final FreteDAO freteDAO    = new FreteDAO();
     private final VeiculoDAO veiculoDAO = new VeiculoDAO();
 
-    // ================================================================
     // EMITIR FRETE
-    // ================================================================
     public void emitirFrete(Frete frete) throws FreteException {
         validarDadosObrigatorios(frete);
         validarRegrasDeEmissao(frete);
@@ -50,16 +48,16 @@ public class FreteBO {
         }
     }
 
-    // ================================================================
     // CONFIRMAR SAÍDA — transação: frete + veículo
-    // ================================================================
     public void confirmarSaida(Long idFrete, LocalDateTime dataSaida) throws FreteException {
         if (dataSaida == null) {
             throw new FreteException("A data e hora de saída são obrigatórias.");
         }
         Frete frete = buscarOuLancar(idFrete);
-        if (frete.getStatus() != StatusFrete.EMITIDO) {
-            throw new FreteException("Apenas fretes com status EMITIDO podem ter a saída confirmada.");
+        try {
+            frete.getStatus().validarTransicao(StatusFrete.SAIDA_CONFIRMADA);
+        } catch (IllegalStateException e) {
+            throw new FreteException(e.getMessage());
         }
         try (Connection conn = ConexaoDB.getConnection()) {
             conn.setAutoCommit(false);
@@ -78,13 +76,13 @@ public class FreteBO {
         }
     }
 
-    // ================================================================
     // REGISTRAR EM TRÂNSITO
-    // ================================================================
     public void registrarEmTransito(Long idFrete) throws FreteException {
         Frete frete = buscarOuLancar(idFrete);
-        if (frete.getStatus() != StatusFrete.SAIDA_CONFIRMADA) {
-            throw new FreteException("Apenas fretes com saída confirmada podem ser colocados em trânsito.");
+        try {
+            frete.getStatus().validarTransicao(StatusFrete.EM_TRANSITO);
+        } catch (IllegalStateException e) {
+            throw new FreteException(e.getMessage());
         }
         try (Connection conn = ConexaoDB.getConnection()) {
             conn.setAutoCommit(false);
@@ -101,10 +99,9 @@ public class FreteBO {
         }
     }
 
-    // ================================================================
     // REGISTRAR ENTREGA — transação: frete + veículo + ocorrência
     // Chamado diretamente ou via OcorrenciaBO para ENTREGA_REALIZADA
-    // ================================================================
+
     public void registrarEntrega(Long idFrete, LocalDateTime dataEntrega,
                                   String nomeRecebedor, String documentoRecebedor,
                                   String municipio, String uf) throws FreteException {
@@ -115,8 +112,10 @@ public class FreteBO {
             throw new FreteException("O documento do recebedor é obrigatório para registrar a entrega.");
         }
         Frete frete = buscarOuLancar(idFrete);
-        if (frete.getStatus() != StatusFrete.EM_TRANSITO) {
-            throw new FreteException("Apenas fretes em trânsito podem ser marcados como entregues.");
+        try {
+            frete.getStatus().validarTransicao(StatusFrete.ENTREGUE);
+        } catch (IllegalStateException e) {
+            throw new FreteException(e.getMessage());
         }
         LocalDateTime dataHoraEntrega = dataEntrega != null ? dataEntrega : LocalDateTime.now();
 
@@ -147,16 +146,16 @@ public class FreteBO {
         }
     }
 
-    // ================================================================
     // REGISTRAR NÃO ENTREGUE — transação: frete + veículo
-    // ================================================================
     public void registrarNaoEntregue(Long idFrete, String motivo) throws FreteException {
         if (motivo == null || motivo.trim().isEmpty()) {
             throw new FreteException("O motivo é obrigatório ao registrar a não entrega.");
         }
         Frete frete = buscarOuLancar(idFrete);
-        if (frete.getStatus() != StatusFrete.EM_TRANSITO) {
-            throw new FreteException("Apenas fretes em trânsito podem ser marcados como não entregues.");
+        try {
+            frete.getStatus().validarTransicao(StatusFrete.NAO_ENTREGUE);
+        } catch (IllegalStateException e) {
+            throw new FreteException(e.getMessage());
         }
         try (Connection conn = ConexaoDB.getConnection()) {
             conn.setAutoCommit(false);
@@ -174,13 +173,13 @@ public class FreteBO {
         }
     }
 
-    // ================================================================
     // CANCELAR
-    // ================================================================
     public void cancelar(Long idFrete) throws FreteException {
         Frete frete = buscarOuLancar(idFrete);
-        if (frete.getStatus() != StatusFrete.EMITIDO) {
-            throw new FreteException("Somente fretes com status EMITIDO podem ser cancelados.");
+        try {
+            frete.getStatus().validarTransicao(StatusFrete.CANCELADO);
+        } catch (IllegalStateException e) {
+            throw new FreteException(e.getMessage());
         }
         try (Connection conn = ConexaoDB.getConnection()) {
             conn.setAutoCommit(false);
@@ -197,9 +196,7 @@ public class FreteBO {
         }
     }
 
-    // ================================================================
     // LISTAR / BUSCAR
-    // ================================================================
     public List<Frete> listar(String filtro, int pagina) throws FreteException {
         try {
             return freteDAO.listar(filtro, pagina);
@@ -229,36 +226,34 @@ public class FreteBO {
         }
     }
 
-    // ================================================================
     // VALIDAÇÕES PRIVADAS
-    // ================================================================
     private void validarDadosObrigatorios(Frete f) throws FreteException {
         if (f.getRemetente() == null || f.getRemetente().getId() == null) {
-            throw new FreteException("O remetente é obrigatório.");
+            throw new FreteException("O remetente é obrigatório.", "idRemetente");
         }
         if (f.getDestinatario() == null || f.getDestinatario().getId() == null) {
-            throw new FreteException("O destinatário é obrigatório.");
+            throw new FreteException("O destinatário é obrigatório.", "idDestinatario");
         }
         if (f.getMotorista() == null || f.getMotorista().getId() == null) {
-            throw new FreteException("O motorista é obrigatório.");
+            throw new FreteException("O motorista é obrigatório.", "idMotorista");
         }
         if (f.getVeiculo() == null || f.getVeiculo().getId() == null) {
-            throw new FreteException("O veículo é obrigatório.");
+            throw new FreteException("O veículo é obrigatório.", "idVeiculo");
         }
         if (f.getMunicipioOrigem() == null || f.getMunicipioOrigem().trim().isEmpty()) {
-            throw new FreteException("O município de origem é obrigatório.");
+            throw new FreteException("O município de origem é obrigatório.", "municipioOrigem");
         }
         if (f.getUfOrigem() == null || f.getUfOrigem().trim().isEmpty()) {
-            throw new FreteException("A UF de origem é obrigatória.");
+            throw new FreteException("A UF de origem é obrigatória.", "ufOrigem");
         }
         if (f.getMunicipioDestino() == null || f.getMunicipioDestino().trim().isEmpty()) {
-            throw new FreteException("O município de destino é obrigatório.");
+            throw new FreteException("O município de destino é obrigatório.", "municipioDestino");
         }
         if (f.getUfDestino() == null || f.getUfDestino().trim().isEmpty()) {
-            throw new FreteException("A UF de destino é obrigatória.");
+            throw new FreteException("A UF de destino é obrigatória.", "ufDestino");
         }
         if (f.getDataPrevisaoEntrega() == null) {
-            throw new FreteException("A data prevista de entrega é obrigatória.");
+            throw new FreteException("A data prevista de entrega é obrigatória.", "dataPrevisaoEntrega");
         }
     }
 
@@ -266,18 +261,18 @@ public class FreteBO {
         LocalDate hoje = LocalDate.now();
 
         if (!f.getDataPrevisaoEntrega().isAfter(hoje)) {
-            throw new FreteException("A data prevista de entrega deve ser posterior à data de emissão.");
+            throw new FreteException("A data prevista de entrega deve ser posterior à data de emissão.", "dataPrevisaoEntrega");
         }
         if (f.getVeiculo().getStatus() != StatusVeiculo.DISPONIVEL) {
             throw new FreteException("O veículo selecionado não está disponível (status: "
-                    + f.getVeiculo().getStatus() + ").");
+                    + f.getVeiculo().getStatus() + ").", "idVeiculo");
         }
         if (f.getMotorista().getStatus() != StatusMotorista.ATIVO) {
-            throw new FreteException("O motorista selecionado não está ativo.");
+            throw new FreteException("O motorista selecionado não está ativo.", "idMotorista");
         }
         try {
             if (freteDAO.motoristaTemFreteAtivo(f.getMotorista().getId())) {
-                throw new FreteException("O motorista já está em uma viagem em andamento.");
+                throw new FreteException("O motorista já está em uma viagem em andamento.", "idMotorista");
             }
         } catch (SQLException e) {
             LOG.severe("Erro ao verificar fretes do motorista: " + e.getMessage());
@@ -285,11 +280,11 @@ public class FreteBO {
         }
         if (f.getMotorista().getCnhValidade() != null
                 && f.getMotorista().getCnhValidade().isBefore(hoje)) {
-            throw new FreteException("A CNH do motorista está vencida.");
+            throw new FreteException("A CNH do motorista está vencida.", "idMotorista");
         }
         if (f.getPesoKg() > f.getVeiculo().getCapacidadeKg()) {
             throw new FreteException("O peso da carga (" + f.getPesoKg() +
-                    " kg) excede a capacidade do veículo (" + f.getVeiculo().getCapacidadeKg() + " kg).");
+                    " kg) excede a capacidade do veículo (" + f.getVeiculo().getCapacidadeKg() + " kg).", "pesoKg");
         }
     }
 
