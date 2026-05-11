@@ -305,7 +305,7 @@ const ufCoords = {
 
 const mapaEl = document.getElementById('mapaRotas');
 if (rotas.length > 0) {
-  const MAPBOX_TOKEN = '<% request.getAttribute("mapboxToken") %>';
+  const MAPBOX_TOKEN = '<%= request.getAttribute("mapboxToken") != null ? request.getAttribute("mapboxToken") : "" %>';
 
   const mapa = L.map('mapaRotas').setView([-15.0, -50.0], 4);
   L.tileLayer(

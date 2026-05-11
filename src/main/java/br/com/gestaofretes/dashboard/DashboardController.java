@@ -9,8 +9,10 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 @WebServlet("/dashboard")
@@ -23,6 +25,22 @@ public class DashboardController extends HttpServlet {
     private final VeiculoDAO    veiculoDAO    = new VeiculoDAO();
     private final FreteDAO      freteDAO      = new FreteDAO();
     private final DashboardDAO  dashboardDAO  = new DashboardDAO();
+
+    private static final String MAPBOX_TOKEN;
+
+    static {
+        String token = "";
+        try (InputStream is = DashboardController.class
+                .getClassLoader().getResourceAsStream("db.properties")) {
+            Properties props = new Properties();
+            props.load(is);
+            token = props.getProperty("mapbox.token", "");
+        } catch (Exception e) {
+            Logger.getLogger(DashboardController.class.getName())
+                  .warning("mapbox.token nao encontrado em db.properties");
+        }
+        MAPBOX_TOKEN = token;
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -69,6 +87,8 @@ public class DashboardController extends HttpServlet {
             // Gráfico 3 — Top rotas (para o mapa)
             List<Object[]> rotas = dashboardDAO.listarTopRotas(10);
             req.setAttribute("graficoRotas", toJsonRotas(rotas));
+
+            req.setAttribute("mapboxToken", MAPBOX_TOKEN);
 
         } catch (Exception e) {
             LOG.severe("Erro ao carregar dados do dashboard: " + e.getMessage());
