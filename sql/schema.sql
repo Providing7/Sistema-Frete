@@ -79,9 +79,7 @@ CREATE TABLE ocorrencia_frete (
     documento_recebedor VARCHAR(20)
 );
 
--- ============================================================
 -- DADOS DE EXEMPLO
--- ============================================================
 
 INSERT INTO cliente (razao_social, nome_fantasia, cnpj, tipo, municipio, uf, status)
 VALUES
@@ -127,9 +125,8 @@ VALUES
    'Equipamentos', 3000, 8, 1500.00, 12.00, 180.00, 1680.00,
    'CANCELADO', '2026-04-10', '2026-04-14');
 
--- ============================================================
 -- TABELA DE USUÁRIOS (autenticação real com senha criptografada)
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS usuario (
     id             SERIAL PRIMARY KEY,
     login          VARCHAR(100) NOT NULL UNIQUE,  -- armazena o e-mail
@@ -139,8 +136,19 @@ CREATE TABLE IF NOT EXISTS usuario (
     ativo          BOOLEAN NOT NULL DEFAULT TRUE
 );
 
--- Usuário admin padrão.
--- IMPORTANTE: após o primeiro acesso, altere a senha pelo sistema.
--- Para criar o usuário admin (ou qualquer outro), execute a classe SeedUsuario
--- (Rodar como Java Application) ou insira manualmente o hash gerado no banco.
+-- TABELA DE HISTÓRICO DE NOTIFICAÇÕES DE CNH
+
+CREATE TABLE IF NOT EXISTS notificacao_motorista (
+    id              SERIAL PRIMARY KEY,
+    id_motorista    INTEGER      NOT NULL REFERENCES motorista(id),
+    motorista_nome  VARCHAR(150) NOT NULL,
+    cnh_numero      VARCHAR(20),
+    cnh_validade    DATE         NOT NULL,
+    dias_restantes  INTEGER      NOT NULL,
+    nivel           VARCHAR(10)  NOT NULL, -- CRITICO, ATENCAO, AVISO
+    processado_em   TIMESTAMP    NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_notif_motorista ON notificacao_motorista(id_motorista);
+CREATE INDEX IF NOT EXISTS idx_notif_processado ON notificacao_motorista(processado_em DESC);
 

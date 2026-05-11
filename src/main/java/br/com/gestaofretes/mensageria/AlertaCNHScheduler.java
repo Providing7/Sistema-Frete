@@ -25,8 +25,7 @@ public class AlertaCNHScheduler implements ServletContextListener {
 
     private static final Logger log = Logger.getLogger(AlertaCNHScheduler.class.getName());
 
-    private static final int DIAS_ALERTA    = 30; // avisa com 30 dias de antecedência
-    private static final int HORA_EXECUCAO  = 8;  // roda às 08h00 todo dia
+    private static final int DIAS_ALERTA = 30;
 
     private ScheduledExecutorService scheduler;
     private Thread                   consumerThread;
@@ -36,16 +35,11 @@ public class AlertaCNHScheduler implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         log.info("[SCHEDULER] Iniciando sistema de alertas de CNH...");
 
-        // 1. Sobe o Consumer em thread dedicada
         consumer       = new AlertaCNHConsumer();
         consumerThread = new Thread(consumer, "alerta-cnh-consumer");
         consumerThread.setDaemon(true); // não impede o Tomcat de desligar
         consumerThread.start();
 
-        // 2. Calcula delay até a próxima execução às 08h
-        long delaySegundos = calcularDelayAte(HORA_EXECUCAO);
-
-        // 3. Agenda execução diária
         scheduler = Executors.newSingleThreadScheduledExecutor(r -> {
             Thread t = new Thread(r, "alerta-cnh-scheduler");
             t.setDaemon(true);
@@ -54,16 +48,13 @@ public class AlertaCNHScheduler implements ServletContextListener {
 
         scheduler.scheduleAtFixedRate(
             this::verificarCNHsEPublicar,
-            delaySegundos,   // espera até às 08h da primeira vez
+            0,   // executa imediatamente
             TimeUnit.DAYS.toSeconds(1), // repete a cada 24h
             TimeUnit.SECONDS
         );
 
-        log.info(String.format(
-            "[SCHEDULER] Agendado — primeira execução em %d minutos (às %dh00). " +
-            "Consumer rodando em thread '%s'.",
-            delaySegundos / 60, HORA_EXECUCAO, consumerThread.getName()
-        ));
+        log.info("[SCHEDULER] Agendado — executando imediatamente e repetindo a cada 24h. " +
+                 "Consumer rodando em thread '" + consumerThread.getName() + "'.");
     }
 
     /**
@@ -120,20 +111,5 @@ public class AlertaCNHScheduler implements ServletContextListener {
         }
 
         log.info("[SCHEDULER] Sistema de alertas encerrado.");
-    }
-
-    /**
-     * Calcula quantos segundos faltam para a próxima ocorrência do horário alvo.
-     */
-    private long calcularDelayAte(int horaAlvo) {
-        LocalDate hoje = LocalDate.now();
-        java.time.LocalDateTime agora  = java.time.LocalDateTime.now();
-        java.time.LocalDateTime alvo   = hoje.atTime(horaAlvo, 0);
-
-        if (agora.isAfter(alvo)) {
-            alvo = alvo.plusDays(1); // se já passou das 08h, agenda para amanhã
-        }
-
-        return ChronoUnit.SECONDS.between(agora, alvo);
     }
 }

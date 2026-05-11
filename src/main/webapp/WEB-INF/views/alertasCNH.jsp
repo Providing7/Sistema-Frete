@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="br.com.gestaofretes.motorista.Motorista, java.util.List, java.time.LocalDate, java.time.temporal.ChronoUnit, java.time.format.DateTimeFormatter" %>
+<%@ page import="br.com.gestaofretes.motorista.Motorista, br.com.gestaofretes.mensageria.NotificacaoMotorista, java.util.List, java.time.LocalDate, java.time.temporal.ChronoUnit, java.time.format.DateTimeFormatter" %>
 <%
     List<Motorista> alertas = (List<Motorista>) request.getAttribute("motoristasAlerta");
     LocalDate hoje = LocalDate.now();
@@ -144,6 +144,64 @@
           </tbody>
         </table>
         <% } %>
+      </div>
+
+      <!-- ═══ HISTÓRICO DE NOTIFICAÇÕES ENVIADAS PELO SISTEMA ═══ -->
+      <%
+        List<NotificacaoMotorista> historico =
+            (List<NotificacaoMotorista>) request.getAttribute("historicoNotificacoes");
+        DateTimeFormatter fmtDH = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+      %>
+      <div style="margin-top:32px;">
+        <div class="section-header">
+          <h2><i class="bi bi-clock-history"></i> Hist&oacute;rico de Notifica&ccedil;&otilde;es do Sistema</h2>
+        </div>
+        <div class="card">
+          <% if (historico == null || historico.isEmpty()) { %>
+            <div class="empty-cnh">
+              <i class="bi bi-bell-slash"></i>
+              <p>Nenhuma notificação registrada ainda. O sistema processa os alertas diariamente às 08h.</p>
+            </div>
+          <% } else { %>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Data / Hora</th>
+                <th>Motorista</th>
+                <th>CNH Nº</th>
+                <th>Validade CNH</th>
+                <th>Dias (na época)</th>
+                <th>Nível</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for (NotificacaoMotorista n : historico) {
+                   String badgeN = "CRITICO".equals(n.getNivel()) ? "badge-cnh-critico" :
+                                   "ATENCAO".equals(n.getNivel()) ? "badge-cnh-atencao" : "badge-cnh-aviso";
+                   String labelN = "CRITICO".equals(n.getNivel()) ? "CRÍTICO" :
+                                   "ATENCAO".equals(n.getNivel()) ? "ATENÇÃO" : "AVISO";
+              %>
+              <tr>
+                <td style="white-space:nowrap;color:var(--gray-500);font-size:13px;">
+                  <%= n.getProcessadoEm().format(fmtDH) %>
+                </td>
+                <td><strong><%= n.getMotoristaNome() %></strong></td>
+                <td><%= n.getCnhNumero() != null ? n.getCnhNumero() : "&mdash;" %></td>
+                <td><%= n.getCnhValidade().format(fmt) %></td>
+                <td class="td-center">
+                  <% if (n.getDiasRestantes() < 0) { %>
+                    <span class="dias-vencido"><%= Math.abs(n.getDiasRestantes()) %>d atrás</span>
+                  <% } else { %>
+                    <span><%= n.getDiasRestantes() %> dias</span>
+                  <% } %>
+                </td>
+                <td><span class="<%= badgeN %>"><%= labelN %></span></td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+          <% } %>
+        </div>
       </div>
 
     </main>
