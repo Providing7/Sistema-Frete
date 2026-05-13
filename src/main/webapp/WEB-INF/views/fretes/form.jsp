@@ -116,8 +116,9 @@
                 <label>Remetente *</label>
                 <select id="idRemetente" name="idRemetente" required>
                   <option value="">-- Selecione o remetente --</option>
-                  <% if (clientes != null) { for (Cliente c : clientes) { %>
-                    <option value="<%= c.getId() %>"><%= c.getRazaoSocial() %></option>
+                  <% String fRem = (String) request.getAttribute("formIdRemetente");
+                     if (clientes != null) { for (Cliente c : clientes) { %>
+                    <option value="<%= c.getId() %>" <%= String.valueOf(c.getId()).equals(fRem) ? "selected" : "" %>><%= c.getRazaoSocial() %></option>
                   <% } } %>
                 </select>
               </div>
@@ -125,26 +126,29 @@
                 <label>Destinat&aacute;rio *</label>
                 <select id="idDestinatario" name="idDestinatario" required>
                   <option value="">-- Selecione o destinat&aacute;rio --</option>
-                  <% if (clientes != null) { for (Cliente c : clientes) { %>
-                    <option value="<%= c.getId() %>"><%= c.getRazaoSocial() %></option>
+                  <% String fDest = (String) request.getAttribute("formIdDestinatario");
+                     if (clientes != null) { for (Cliente c : clientes) { %>
+                    <option value="<%= c.getId() %>" <%= String.valueOf(c.getId()).equals(fDest) ? "selected" : "" %>><%= c.getRazaoSocial() %></option>
                   <% } } %>
                 </select>
               </div>
               <div class="form-group">
                 <label>Motorista *</label>
-                <select name="idMotorista" required>
+                <select id="idMotorista" name="idMotorista" required>
                   <option value="">-- Selecione o motorista --</option>
-                  <% if (motoristas != null) { for (Motorista m : motoristas) { %>
-                    <option value="<%= m.getId() %>"><%= m.getNome() %></option>
+                  <% String fMot = (String) request.getAttribute("formIdMotorista");
+                     if (motoristas != null) { for (Motorista m : motoristas) { %>
+                    <option value="<%= m.getId() %>" <%= String.valueOf(m.getId()).equals(fMot) ? "selected" : "" %>><%= m.getNome() %></option>
                   <% } } %>
                 </select>
               </div>
               <div class="form-group">
                 <label>Ve&iacute;culo *</label>
-                <select name="idVeiculo" required>
+                <select id="idVeiculo" name="idVeiculo" required>
                   <option value="">-- Selecione o ve&iacute;culo --</option>
-                  <% if (veiculos != null) { for (Veiculo v : veiculos) { %>
-                    <option value="<%= v.getId() %>"><%= v.getPlaca() %> &mdash; <%= v.getTipo() != null ? v.getTipo().name() : "" %></option>
+                  <% String fVei = (String) request.getAttribute("formIdVeiculo");
+                     if (veiculos != null) { for (Veiculo v : veiculos) { %>
+                    <option value="<%= v.getId() %>" <%= String.valueOf(v.getId()).equals(fVei) ? "selected" : "" %>><%= v.getPlaca() %> &mdash; <%= v.getTipo() != null ? v.getTipo().name() : "" %></option>
                   <% } } %>
                 </select>
               </div>
@@ -157,25 +161,27 @@
             <div class="form-grid">
               <div class="form-group">
                 <label>Munic&iacute;pio de Origem *</label>
-                <input type="text" name="municipioOrigem" required
-                       placeholder="Ex: São Paulo"
-                       maxlength="100" />
+                <input type="text" id="municipioOrigem" name="municipioOrigem" required
+                       placeholder="Ex: São Paulo" maxlength="100"
+                       value="<%= request.getAttribute("formMunicipioOrigem") != null ? request.getAttribute("formMunicipioOrigem") : "" %>" />
               </div>
               <div class="form-group">
                 <label>UF Origem *</label>
-                <input type="text" name="ufOrigem" required
-                       class="campo-uf" maxlength="2" placeholder="SP" />
+                <input type="text" id="ufOrigem" name="ufOrigem" required
+                       class="campo-uf" maxlength="2" placeholder="SP"
+                       value="<%= request.getAttribute("formUfOrigem") != null ? request.getAttribute("formUfOrigem") : "" %>" />
               </div>
               <div class="form-group">
                 <label>Munic&iacute;pio de Destino *</label>
-                <input type="text" name="municipioDestino" required
-                       placeholder="Ex: Curitiba"
-                       maxlength="100" />
+                <input type="text" id="municipioDestino" name="municipioDestino" required
+                       placeholder="Ex: Curitiba" maxlength="100"
+                       value="<%= request.getAttribute("formMunicipioDestino") != null ? request.getAttribute("formMunicipioDestino") : "" %>" />
               </div>
               <div class="form-group">
                 <label>UF Destino *</label>
-                <input type="text" name="ufDestino" required
-                       class="campo-uf" maxlength="2" placeholder="PR" />
+                <input type="text" id="ufDestino" name="ufDestino" required
+                       class="campo-uf" maxlength="2" placeholder="PR"
+                       value="<%= request.getAttribute("formUfDestino") != null ? request.getAttribute("formUfDestino") : "" %>" />
               </div>
             </div>
           </div>
@@ -186,20 +192,21 @@
             <div class="form-grid">
               <div class="form-group full">
                 <label>Descri&ccedil;&atilde;o da Carga</label>
-                <input type="text" name="descricaoCarga"
-                       placeholder="Ex: Eletrodomésticos" maxlength="300" />
+                <input type="text" id="descricaoCarga" name="descricaoCarga"
+                       placeholder="Ex: Eletrodomésticos" maxlength="300"
+                       value="<%= request.getAttribute("formDescricaoCarga") != null ? request.getAttribute("formDescricaoCarga") : "" %>" />
               </div>
               <div class="form-group">
                 <label>Peso Bruto (kg) *</label>
-                <input type="text" name="pesoKg" required
-                       data-mask="decimal" inputmode="decimal"
-                       placeholder="0.00" />
+                <input type="text" id="pesoKg" name="pesoKg" required
+                       data-mask="decimal" inputmode="decimal" placeholder="0.00"
+                       value="<%= request.getAttribute("formPesoKg") != null ? request.getAttribute("formPesoKg") : "" %>" />
               </div>
               <div class="form-group">
                 <label>Volumes *</label>
-                <input type="number" name="volumes" required
-                       min="1" max="99999"
-                       placeholder="Qtd. de volumes" />
+                <input type="number" id="volumes" name="volumes" required
+                       min="1" max="99999" placeholder="Qtd. de volumes"
+                       value="<%= request.getAttribute("formVolumes") != null ? request.getAttribute("formVolumes") : "" %>" />
               </div>
             </div>
           </div>
@@ -211,14 +218,14 @@
               <div class="form-group">
                 <label>Valor do Frete (R$) *</label>
                 <input type="text" id="valorFrete" name="valorFrete" required
-                       data-mask="decimal" inputmode="decimal"
-                       placeholder="0.00" />
+                       data-mask="decimal" inputmode="decimal" placeholder="0.00"
+                       value="<%= request.getAttribute("formValorFrete") != null ? request.getAttribute("formValorFrete") : "" %>" />
               </div>
               <div class="form-group">
                 <label>Al&iacute;quota ICMS (%) *</label>
                 <input type="text" id="aliquotaIcms" name="aliquotaIcms" required
-                       data-mask="decimal" inputmode="decimal"
-                       placeholder="12.00" value="12.00" />
+                       data-mask="decimal" inputmode="decimal" placeholder="12.00"
+                       value="<%= request.getAttribute("formAliquotaIcms") != null ? request.getAttribute("formAliquotaIcms") : "12.00" %>" />
               </div>
               <!-- Preview calculado em tempo real (só informativo) -->
               <div class="form-group">
@@ -242,7 +249,8 @@
             <div class="form-grid">
               <div class="form-group">
                 <label>Data Prevista de Entrega *</label>
-                <input type="date" id="dataPrevisaoEntrega" name="dataPrevisaoEntrega" required />
+                <input type="date" id="dataPrevisaoEntrega" name="dataPrevisaoEntrega" required
+                       value="<%= request.getAttribute("formDataPrevisaoEntrega") != null ? request.getAttribute("formDataPrevisaoEntrega") : "" %>" />
                 <span style="font-size:11px;color:var(--gray-500);">Deve ser posterior à data de hoje.</span>
               </div>
             </div>
@@ -259,5 +267,20 @@
     </main>
   </div>
 </div>
+
+<% String erroCampoVal = (String) request.getAttribute("erroCampo"); %>
+<% if (erroCampoVal != null) { %>
+<script>
+(function () {
+  var campo = document.getElementById('<%= erroCampoVal %>');
+  if (!campo) return;
+  campo.style.outline = '2px solid #e74c3c';
+  campo.style.boxShadow = '0 0 0 3px rgba(231,76,60,0.18)';
+  campo.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  campo.focus();
+})();
+</script>
+<% } %>
+
 </body>
 </html>

@@ -6,7 +6,9 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.time.LocalDate;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet("/motoristas")
 public class MotoristaController extends HttpServlet {
@@ -37,7 +39,8 @@ public class MotoristaController extends HttpServlet {
 
             } else if ("excluir".equals(acao)) {
                 bo.excluir(Long.parseLong(req.getParameter("id")));
-                resp.sendRedirect(req.getContextPath() + "/motoristas?sucesso=Motorista+excluído+com+sucesso.");
+                resp.sendRedirect(req.getContextPath() + "/motoristas?sucesso="
+                        + URLEncoder.encode("Motorista excluído com sucesso.", StandardCharsets.UTF_8.name()));
 
             } else {
                 String filtro = req.getParameter("filtro");
@@ -70,10 +73,12 @@ public class MotoristaController extends HttpServlet {
         try {
             if (m.getId() == null) {
                 bo.cadastrar(m);
-                resp.sendRedirect(req.getContextPath() + "/motoristas?sucesso=Motorista+cadastrado+com+sucesso.");
+                resp.sendRedirect(req.getContextPath() + "/motoristas?sucesso="
+                        + URLEncoder.encode("Motorista cadastrado com sucesso.", StandardCharsets.UTF_8.name()));
             } else {
                 bo.atualizar(m);
-                resp.sendRedirect(req.getContextPath() + "/motoristas?sucesso=Motorista+atualizado+com+sucesso.");
+                resp.sendRedirect(req.getContextPath() + "/motoristas?sucesso="
+                        + URLEncoder.encode("Motorista atualizado com sucesso.", StandardCharsets.UTF_8.name()));
             }
         } catch (CadastroException e) {
             req.setAttribute("erro", e.getMessage());

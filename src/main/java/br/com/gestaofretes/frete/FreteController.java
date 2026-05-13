@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.logging.Logger;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet("/fretes")
 public class FreteController extends HttpServlet {
@@ -98,20 +100,21 @@ public class FreteController extends HttpServlet {
             if ("salvar".equals(acao)) {
                 Frete frete = montarFrete(req);
                 bo.emitirFrete(frete);
-                resp.sendRedirect(req.getContextPath() + "/fretes?sucesso=Frete+emitido+com+sucesso.");
+                resp.sendRedirect(req.getContextPath() + "/fretes?sucesso="
+                        + URLEncoder.encode("Frete emitido com sucesso.", StandardCharsets.UTF_8.name()));
 
             } else if ("confirmarSaida".equals(acao)) {
                 Long id = Long.parseLong(req.getParameter("id"));
                 LocalDateTime dataSaida = parseDataHora(req.getParameter("dataSaida"));
                 bo.confirmarSaida(id, dataSaida);
                 resp.sendRedirect(req.getContextPath() + "/fretes?acao=detalhe&id=" + id
-                        + "&sucesso=Saída+confirmada+com+sucesso.");
+                        + "&sucesso=" + URLEncoder.encode("Saída confirmada com sucesso.", StandardCharsets.UTF_8.name()));
 
             } else if ("emTransito".equals(acao)) {
                 Long id = Long.parseLong(req.getParameter("id"));
                 bo.registrarEmTransito(id);
                 resp.sendRedirect(req.getContextPath() + "/fretes?acao=detalhe&id=" + id
-                        + "&sucesso=Frete+registrado+em+trânsito.");
+                        + "&sucesso=" + URLEncoder.encode("Frete registrado em trânsito.", StandardCharsets.UTF_8.name()));
 
             } else if ("registrarEntrega".equals(acao)) {
                 Long id = Long.parseLong(req.getParameter("id"));
@@ -122,29 +125,46 @@ public class FreteController extends HttpServlet {
                         req.getParameter("municipio"),
                         req.getParameter("uf"));
                 resp.sendRedirect(req.getContextPath() + "/fretes?acao=detalhe&id=" + id
-                        + "&sucesso=Entrega+registrada+com+sucesso.");
+                        + "&sucesso=" + URLEncoder.encode("Entrega registrada com sucesso.", StandardCharsets.UTF_8.name()));
 
             } else if ("naoEntregue".equals(acao)) {
                 Long id = Long.parseLong(req.getParameter("id"));
                 bo.registrarNaoEntregue(id, req.getParameter("motivo"));
                 resp.sendRedirect(req.getContextPath() + "/fretes?acao=detalhe&id=" + id
-                        + "&sucesso=Não+entrega+registrada.");
+                        + "&sucesso=" + URLEncoder.encode("Não entrega registrada.", StandardCharsets.UTF_8.name()));
 
             } else if ("cancelar".equals(acao)) {
                 Long id = Long.parseLong(req.getParameter("id"));
                 bo.cancelar(id);
-                resp.sendRedirect(req.getContextPath() + "/fretes?sucesso=Frete+cancelado.");
+                resp.sendRedirect(req.getContextPath() + "/fretes?sucesso="
+                        + URLEncoder.encode("Frete cancelado.", StandardCharsets.UTF_8.name()));
 
             } else {
                 resp.sendRedirect(req.getContextPath() + "/fretes");
             }
 
         } catch (FreteException e) {
-            // Erro de negócio — volta para o formulário com a mensagem
             req.setAttribute("erro", e.getMessage());
+            if (e.getCampo() != null) {
+                req.setAttribute("erroCampo", e.getCampo());
+            }
             try {
                 if ("salvar".equals(acao)) {
                     carregarDependencias(req);
+                    req.setAttribute("formIdRemetente",        req.getParameter("idRemetente"));
+                    req.setAttribute("formIdDestinatario",     req.getParameter("idDestinatario"));
+                    req.setAttribute("formIdMotorista",        req.getParameter("idMotorista"));
+                    req.setAttribute("formIdVeiculo",          req.getParameter("idVeiculo"));
+                    req.setAttribute("formMunicipioOrigem",    req.getParameter("municipioOrigem"));
+                    req.setAttribute("formUfOrigem",           req.getParameter("ufOrigem"));
+                    req.setAttribute("formMunicipioDestino",   req.getParameter("municipioDestino"));
+                    req.setAttribute("formUfDestino",          req.getParameter("ufDestino"));
+                    req.setAttribute("formDescricaoCarga",     req.getParameter("descricaoCarga"));
+                    req.setAttribute("formPesoKg",             req.getParameter("pesoKg"));
+                    req.setAttribute("formVolumes",            req.getParameter("volumes"));
+                    req.setAttribute("formValorFrete",         req.getParameter("valorFrete"));
+                    req.setAttribute("formAliquotaIcms",       req.getParameter("aliquotaIcms"));
+                    req.setAttribute("formDataPrevisaoEntrega",req.getParameter("dataPrevisaoEntrega"));
                     req.getRequestDispatcher("/WEB-INF/views/fretes/form.jsp").forward(req, resp);
                 } else {
                     Long id = parseLongOuNulo(req.getParameter("id"));

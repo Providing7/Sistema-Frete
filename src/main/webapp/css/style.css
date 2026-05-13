@@ -689,6 +689,7 @@ tbody td strong { color: var(--gray-900); font-weight: 600; }
 }
 
 .td-actions { display: flex; gap: 5px; align-items: center; }
+.td-center  { text-align: center; }
 
 .cell-with-avatar {
   display: flex;
@@ -1224,4 +1225,179 @@ tbody td strong { color: var(--gray-900); font-weight: 600; }
   border: none;
   border-top: 1px solid var(--gray-200);
   margin: 0;
+}
+
+/* ============================================
+   ALERTAS DE CNH
+   ============================================ */
+
+/* Cards de resumo no topo */
+.alerta-cnh-cards {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.alerta-cnh-card {
+  flex: 1;
+  min-width: 140px;
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.alerta-cnh-card .card-num {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.alerta-cnh-card .card-leg {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: .85;
+}
+
+.alerta-cnh-card.card-vencida { background: #FDEDEC; border-left: 4px solid #E74C3C; color: #922B21; }
+.alerta-cnh-card.card-30      { background: #FEF9E7; border-left: 4px solid #F39C12; color: #7D6608; }
+.alerta-cnh-card.card-60      { background: #FEF5E4; border-left: 4px solid #E67E22; color: #784212; }
+.alerta-cnh-card.card-90      { background: #EAF4FB; border-left: 4px solid #2E86C1; color: #1A5276; }
+
+/* Abas de filtro */
+.filtro-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filtro-tabs button {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--gray-300);
+  background: white;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-600);
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.filtro-tabs button:hover,
+.filtro-tabs button.ativo {
+  background: #2C3E50;
+  color: white;
+  border-color: #2C3E50;
+}
+
+/* Badges específicos de CNH */
+.badge-cnh-vencida { background: #FDEDEC; color: #922B21; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.badge-cnh-critico { background: #FEF9E7; color: #7D6608; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.badge-cnh-atencao { background: #FEF5E4; color: #784212; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.badge-cnh-aviso   { background: #EAF4FB; color: #1A5276; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+
+/* Dias restantes coloridos */
+.dias-vencido  { color: #E74C3C; font-weight: 700; }
+.dias-critico  { color: #E74C3C; }
+.dias-atencao  { color: #E67E22; }
+.dias-aviso    { color: #2E86C1; }
+
+/* Estado vazio */
+.empty-cnh {
+  padding: 48px;
+  text-align: center;
+  color: var(--gray-400);
+}
+
+.empty-cnh i {
+  font-size: 40px;
+  color: var(--success);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.empty-cnh p { font-size: 14px; }
+
+/* Ocultar linha filtrada */
+tr.hide { display: none; }
+
+/* Banner compacto de alerta CNH no dashboard */
+.alert-cnh-banner {
+  margin-bottom: 24px;
+  border-left: 4px solid #E67E22;
+  background: #FEF9E7;
+}
+
+.alert-cnh-icon {
+  color: #E67E22;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.alert-cnh-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.alert-cnh-titulo {
+  color: #784212;
+  font-weight: 600;
+}
+
+/* ============================================
+   GRÁFICOS DO DASHBOARD
+   ============================================ */
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 20px;
+  margin-bottom: 0;
+}
+
+.chart-card {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 240px;
+}
+
+.chart-wrapper-sm {
+  height: 220px;
+}
+
+.mapa-rotas {
+  height: 420px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #f4f7fb;
+}
+
+@media (max-width: 900px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
 }
